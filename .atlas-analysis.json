@@ -1,0 +1,113 @@
+{
+  "projectType": "saas",
+  "projectName": "Forge",
+  "projectDescription": "A customizable dashboard platform that brings all your essential tools and widgets into one unified workspace.",
+  "theme": "almond",
+  "primaryColor": "#6366f1",
+  "lightColor": "#818cf8",
+  "darkColor": "#4f46e5",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Self-Hosting",
+            "pages": [
+              "self-hosting/setup",
+              "self-hosting/environment-variables",
+              "self-hosting/deployment"
+            ]
+          },
+          {
+            "group": "Core Features",
+            "pages": [
+              "features/dashboards",
+              "features/widgets",
+              "features/customization",
+              "features/integrations"
+            ]
+          },
+          {
+            "group": "Widgets",
+            "pages": [
+              "widgets/overview",
+              "widgets/meetings",
+              "widgets/inbox",
+              "widgets/github",
+              "widgets/stocks",
+              "widgets/weather",
+              "widgets/markdown-editor",
+              "widgets/bookmarks",
+              "widgets/todo",
+              "widgets/clock",
+              "widgets/countdown",
+              "widgets/github-heatmap",
+              "widgets/kanban"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "integrations/google",
+              "integrations/github",
+              "integrations/notion",
+              "integrations/coinbase"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "api/introduction",
+              "api/authentication"
+            ]
+          },
+          {
+            "group": "Endpoints",
+            "pages": [
+              "api/dashboards",
+              "api/widgets",
+              "api/settings",
+              "api/notifications",
+              "api/accounts"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Customizable drag-and-drop dashboard with 12+ widgets",
+    "Multiple dashboards for different contexts",
+    "Real-time updates and notifications",
+    "OAuth integrations with Google, GitHub, Notion, and Coinbase",
+    "Self-hostable with full data control",
+    "Responsive design for desktop, tablet, and mobile"
+  ],
+  "publicApiSurface": [
+    "POST /api/dashboards - Create dashboard",
+    "GET /api/dashboards - List dashboards",
+    "PUT /api/dashboards - Update dashboard",
+    "DELETE /api/dashboards - Delete dashboard",
+    "POST /api/widgets - Create widget",
+    "GET /api/widgets - List widgets",
+    "PUT /api/widgets - Update widget",
+    "DELETE /api/widgets - Delete widget",
+    "GET /api/settings - Get user settings",
+    "PUT /api/settings - Update settings",
+    "GET /api/notifications - Get notifications",
+    "GET /api/accounts - List connected accounts"
+  ]
+}
