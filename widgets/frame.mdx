@@ -1,0 +1,226 @@
+---
+title: Frame Widget
+description: Embed external websites and web applications directly in your dashboard
+---
+
+The Frame widget allows you to embed any external website or web application using an iframe, bringing third-party tools directly into your Forge dashboard.
+
+## Features
+
+- **Universal Embedding**: Embed virtually any website that allows iframe embedding
+- **Responsive Design**: Automatically adjusts to widget size
+- **Secure Sandbox**: Runs with appropriate security restrictions
+- **Custom Sizing**: Configure widget dimensions to fit your content
+- **No Authentication Required**: Works immediately without OAuth setup
+
+## Configuration
+
+### Setting the URL
+
+The Frame widget requires a URL to embed content from an external source.
+
+<Steps>
+  <Step title="Add the widget">
+    Click **+ Add Widget** and select **Frame** from the widget list
+  </Step>
+  
+  <Step title="Configure URL">
+    Enter the URL of the website you want to embed in the widget configuration dialog
+  </Step>
+  
+  <Step title="Save configuration">
+    Click **Save** to add the Frame widget to your dashboard with the specified URL
+  </Step>
+</Steps>
+
+### URL Requirements
+
+The embedded URL must:
+- Use HTTPS protocol (recommended for security)
+- Allow iframe embedding (not blocked by X-Frame-Options header)
+- Be publicly accessible or properly authenticated
+
+<Warning>
+Some websites explicitly block iframe embedding for security reasons. If a site doesn't load, check if the website allows iframe embedding or try an alternative URL.
+</Warning>
+
+## Usage
+
+### Embedding Examples
+
+Popular use cases for the Frame widget:
+
+**Analytics Dashboards**
+- Google Analytics embed
+- Plausible Analytics dashboard
+- Custom Grafana panels
+
+**Productivity Tools**
+- Notion pages
+- Figma prototypes
+- Google Docs viewer
+- Airtable views
+
+**Monitoring Services**
+- Status pages (e.g., status.io)
+- Server monitoring dashboards
+- Uptime monitors
+
+**Other Services**
+- Calendar embeds
+- Forms and surveys
+- Documentation sites
+- Internal tools
+
+### Interaction
+
+The embedded content is fully interactive within the sandbox:
+- Click links and buttons
+- Fill out forms
+- Scroll and navigate
+- Play videos
+
+### Sandbox Permissions
+
+For security, the iframe runs with the following sandbox permissions:
+- `allow-scripts` - JavaScript execution allowed
+- `allow-same-origin` - Same-origin policy applied
+- `allow-forms` - Form submission enabled
+- `allow-popups` - Popup windows allowed
+- `allow-presentation` - Presentation mode supported
+
+<Info>
+These sandbox restrictions help protect your dashboard while still allowing most web functionality to work properly.
+</Info>
+
+## Configuration Options
+
+### URL (Required)
+
+<ParamField path="url" type="string" required>
+  The full URL of the website or web application to embed. Must include the protocol (http:// or https://).
+  
+  **Example**: `https://example.com/dashboard`
+</ParamField>
+
+### Sizes
+
+The Frame widget supports flexible sizing:
+
+- **Desktop**: 2 columns × 2 rows (default)
+- **Tablet**: 2 columns × 2 rows
+- **Mobile**: 1 column × 1 row
+
+You can resize the widget by dragging the corners in edit mode to accommodate your embedded content.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Website won't load / shows blank">
+    The website may be blocking iframe embedding via the `X-Frame-Options` or `Content-Security-Policy` headers. Try:
+    - Checking if the site explicitly allows iframes
+    - Using an embed-specific URL (many services provide these)
+    - Contacting the website owner to request iframe support
+  </Accordion>
+
+  <Accordion title="Content is cut off">
+    The embedded site may not be responsive. Try:
+    - Resizing the widget to be larger
+    - Using a mobile-optimized URL if available
+    - Checking if the site provides a dedicated embed view
+  </Accordion>
+
+  <Accordion title="Features not working inside the frame">
+    Some advanced features may be restricted by the sandbox. This is for security:
+    - File downloads may be blocked
+    - Some JavaScript features might not work
+    - Authentication flows might fail (use services with token-based auth instead)
+  </Accordion>
+
+  <Accordion title="Mixed content warnings">
+    If your Forge instance uses HTTPS but the embedded URL uses HTTP, browsers will block the content:
+    - Always use HTTPS URLs when possible
+    - Update the embedded site to support HTTPS
+    - Check browser console for specific errors
+  </Accordion>
+</AccordionGroup>
+
+## Best Practices
+
+### URL Selection
+
+✅ **Do**:
+- Use HTTPS URLs for security
+- Test URLs before adding them to your dashboard
+- Use embed-specific URLs when available (many services provide these)
+- Choose responsive sites that work well in iframes
+
+❌ **Don't**:
+- Embed sites with sensitive authentication flows
+- Use HTTP URLs if HTTPS is available
+- Embed sites that explicitly disallow iframe embedding
+- Embed resource-heavy sites that may slow down your dashboard
+
+### Performance
+
+- **Limit Frame widgets**: Too many can slow down your dashboard
+- **Choose lightweight content**: Avoid embedding video-heavy pages
+- **Use lazy loading**: Forge automatically optimizes frame loading
+- **Test responsiveness**: Ensure embedded content works at different sizes
+
+### Security
+
+- **Trust the source**: Only embed URLs from trusted websites
+- **Avoid sensitive data**: Don't embed pages with passwords or sensitive information
+- **Review permissions**: Understand what the embedded site can access
+- **Monitor usage**: Regularly review what's embedded in your dashboard
+
+## Examples
+
+### Embedding a Status Page
+
+```
+URL: https://status.example.com/embed
+```
+
+Perfect for monitoring service uptime without leaving your dashboard.
+
+### Embedding Notion
+
+```
+URL: https://notion.so/your-page-id?embed=true
+```
+
+View Notion pages directly in your dashboard (requires sharing settings).
+
+### Embedding Analytics
+
+```
+URL: https://plausible.io/your-domain.com?embed=true
+```
+
+Track website analytics in real-time alongside other widgets.
+
+### Embedding Documentation
+
+```
+URL: https://docs.example.com/getting-started
+```
+
+Keep important documentation readily accessible.
+
+## Widget Sizes
+
+- **Desktop**: 2 columns × 2 rows (recommended for rich content)
+- **Tablet**: 2 columns × 2 rows
+- **Mobile**: 1 column × 1 row
+
+<Tip>
+For content-heavy embeds like dashboards or documentation, consider using the maximum widget size (2×2 or larger) to ensure readability.
+</Tip>
+
+## Related Widgets
+
+- **Markdown Editor** - For creating native content instead of embedding
+- **Bookmarks** - For quick links without full embedding
+- **Todo** - For task management without external tools

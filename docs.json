@@ -54,7 +54,7 @@
               "widgets/meetings",
               "widgets/inbox",
               "widgets/github",
-              "widgets/stocks",
+              "widgets/crypto",
               "widgets/weather",
               "widgets/markdown-editor",
               "widgets/bookmarks",
@@ -62,7 +62,8 @@
               "widgets/clock",
               "widgets/countdown",
               "widgets/github-heatmap",
-              "widgets/kanban"
+              "widgets/kanban",
+              "widgets/frame"
             ]
           },
           {
