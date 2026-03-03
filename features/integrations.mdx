@@ -1,0 +1,343 @@
+---
+title: OAuth Integrations
+description: Connect GitHub, Google, and Notion to unlock powerful widgets and sync your data
+---
+
+## Overview
+
+Forge integrates with popular services through secure OAuth connections. These integrations enable powerful widgets that display real-time data from your accounts, including GitHub activity, email, calendar events, and Notion pages.
+
+## Available Integrations
+
+<CardGroup cols={3}>
+  <Card title="GitHub" icon="github">
+    Access your repositories, issues, pull requests, and contribution activity.
+  </Card>
+  
+  <Card title="Google" icon="google">
+    Connect to Gmail and Google Calendar for email and meeting widgets.
+  </Card>
+  
+  <Card title="Notion" icon="book">
+    Integrate your Notion workspace to view and manage pages.
+  </Card>
+</CardGroup>
+
+## Connecting an Integration
+
+<Steps>
+  <Step title="Access Integration Settings">
+    Navigate to your account settings and select the "Integrations" tab.
+  </Step>
+  
+  <Step title="Choose a Service">
+    Click the "Connect" button next to the service you want to integrate (GitHub, Google, or Notion).
+  </Step>
+  
+  <Step title="Authorize Access">
+    You'll be redirected to the service's OAuth authorization page. Review the requested permissions and click "Authorize" to grant access.
+  </Step>
+  
+  <Step title="Return to Forge">
+    After authorization, you'll be redirected back to Forge. Your integration is now active.
+  </Step>
+  
+  <Step title="Start Using Widgets">
+    Add widgets that require this integration to your dashboard. They'll automatically use your connected account.
+  </Step>
+</Steps>
+
+<Info>
+  Forge uses OAuth 2.0 for secure authentication. Your credentials are never stored—only access tokens are kept to fetch data on your behalf.
+</Info>
+
+## GitHub Integration
+
+### Permissions Requested
+
+When you connect GitHub, Forge requests the following scopes:
+
+- **repo**: Access to your repositories (public and private)
+- **user:email**: Read your email addresses
+
+These permissions enable:
+- Viewing your issues and pull requests
+- Displaying repository activity
+- Showing your contribution heatmap
+- Accessing commit history
+
+### Widgets Enabled
+
+<CardGroup cols={2}>
+  <Card title="GitHub Widget" icon="github">
+    Display and filter:
+    - Open issues across your repositories
+    - Pull requests requiring review
+    - Repository-specific activity
+    - Labels and assignees
+    
+    Supports filtering by repository, status, and labels for focused views.
+  </Card>
+  
+  <Card title="GitHub Heatmap Widget" icon="chart-simple">
+    Visualize:
+    - Daily contribution activity
+    - Contribution streaks
+    - Activity patterns over time
+    - Year-over-year comparisons
+    
+    Helps track your coding consistency and identify productive periods.
+  </Card>
+</CardGroup>
+
+### Configuration
+
+After connecting GitHub:
+
+1. **Select Repositories**: Choose which repositories to track in widget settings
+2. **Filter Options**: Configure filters for issues and pull requests
+3. **Refresh Rate**: Adjust how frequently data updates (respects GitHub API rate limits)
+4. **Display Preferences**: Customize which information appears in the widget
+
+<Tip>
+  GitHub widgets automatically refresh every few minutes to show the latest activity. Manual refresh is available via the widget menu.
+</Tip>
+
+## Google Integration
+
+### Permissions Requested
+
+Connecting Google requires these scopes:
+
+- **https://www.googleapis.com/auth/calendar**: Read-only access to your calendar
+- **https://www.googleapis.com/auth/gmail.readonly**: Read-only access to Gmail
+
+These permissions enable:
+- Viewing upcoming meetings and events
+- Reading email inbox
+- Displaying email metadata (sender, subject, time)
+- Syncing calendar events in real-time
+
+### Widgets Enabled
+
+<CardGroup cols={2}>
+  <Card title="Meetings Widget" icon="calendar">
+    Display:
+    - Today's scheduled meetings
+    - Upcoming events for the week
+    - Meeting times and durations
+    - Calendar event details
+    - Quick join links for video calls
+    
+    Stay on top of your schedule without opening Google Calendar.
+  </Card>
+  
+  <Card title="Inbox Widget" icon="inbox">
+    Monitor:
+    - Unread email count
+    - Recent messages
+    - Sender information
+    - Email subjects and previews
+    - Priority indicators
+    
+    Keep track of important emails at a glance.
+  </Card>
+</CardGroup>
+
+### Configuration
+
+Google integration options:
+
+1. **Calendar Selection**: Choose which calendars to display in the Meetings widget
+2. **Email Filters**: Configure inbox widget to show specific labels or categories
+3. **Time Range**: Set how far ahead to show calendar events
+4. **Notification Preferences**: Enable alerts for upcoming meetings
+
+<Info>
+  Google integration uses offline access to maintain connection even when you're not actively using Forge. Refresh tokens are securely stored and rotated automatically.
+</Info>
+
+## Notion Integration
+
+### Permissions Requested
+
+Notion integration requires:
+
+- Access to pages and databases you explicitly share with Forge
+- Read permissions for shared content
+
+These permissions enable:
+- Viewing Notion pages in widgets
+- Displaying database entries
+- Syncing updates from your workspace
+
+### Usage
+
+After connecting Notion:
+
+1. Share specific pages or databases with the Forge integration
+2. Configure widgets to display your Notion content
+3. View and interact with your Notion data directly from your dashboard
+
+<Tip>
+  Only pages explicitly shared with Forge are accessible. Your private Notion content remains completely private.
+</Tip>
+
+## Managing Integrations
+
+### Viewing Connected Accounts
+
+Check which integrations are currently active:
+
+<Steps>
+  <Step title="Open Settings">
+    Navigate to your account settings from the user menu.
+  </Step>
+  
+  <Step title="Integrations Tab">
+    View all connected services and their connection status.
+  </Step>
+  
+  <Step title="Check Status">
+    Each integration shows:
+    - Connection status (active/expired)
+    - Last sync time
+    - Granted permissions
+    - Enabled widgets using this integration
+  </Step>
+</Steps>
+
+### Refreshing Connections
+
+If an integration stops working:
+
+1. **Expired Tokens**: Some access tokens expire after a period. Reconnect the integration to refresh.
+2. **Revoked Access**: If you revoked access on the service side, reconnect through Forge.
+3. **Permission Changes**: If you need additional permissions, disconnect and reconnect the integration.
+
+### Disconnecting Integrations
+
+<Warning>
+  Disconnecting an integration will break all widgets that depend on it. They'll show a "Connect Integration" prompt instead of data.
+</Warning>
+
+To disconnect an integration:
+
+<Steps>
+  <Step title="Access Integration Settings">
+    Go to Settings > Integrations.
+  </Step>
+  
+  <Step title="Select Integration">
+    Click "Disconnect" next to the service you want to remove.
+  </Step>
+  
+  <Step title="Confirm Removal">
+    Confirm that you want to disconnect. This removes the access token from Forge.
+  </Step>
+  
+  <Step title="Revoke on Service Side">
+    For complete removal, also revoke Forge's access in the service's settings (GitHub Settings > Applications, Google Account > Security, etc.).
+  </Step>
+</Steps>
+
+## Security & Privacy
+
+### Data Storage
+
+<CardGroup cols={2}>
+  <Card title="Access Tokens" icon="key">
+    Only OAuth access and refresh tokens are stored in Forge's database. Your passwords are never collected or stored.
+  </Card>
+  
+  <Card title="Token Encryption" icon="lock">
+    Access tokens are stored securely and transmitted only over encrypted connections.
+  </Card>
+  
+  <Card title="Minimal Permissions" icon="shield-halved">
+    Forge requests only the permissions necessary for widget functionality.
+  </Card>
+  
+  <Card title="User Control" icon="user-shield">
+    You have complete control over which integrations are connected and can disconnect them at any time.
+  </Card>
+</CardGroup>
+
+### Token Lifecycle
+
+<Tabs>
+  <Tab title="Access Tokens">
+    - Used to fetch data from integrated services
+    - Expire after a service-defined period
+    - Automatically refreshed using refresh tokens
+    - Stored in your user-specific database records
+  </Tab>
+  
+  <Tab title="Refresh Tokens">
+    - Used to obtain new access tokens when they expire
+    - Long-lived (typically don't expire)
+    - Securely stored alongside access tokens
+    - Invalidated when you disconnect an integration
+  </Tab>
+  
+  <Tab title="Revocation">
+    - Disconnecting in Forge removes tokens from the database
+    - Revoking access on the service side invalidates tokens immediately
+    - Both actions prevent further data access
+    - Widgets automatically prompt for reconnection
+  </Tab>
+</Tabs>
+
+### Best Practices
+
+1. **Regular Review**: Periodically review connected integrations and remove those you no longer use
+2. **Permission Audits**: Check what permissions each service has granted to Forge
+3. **Secure Access**: Use strong passwords and 2FA on integrated services for maximum security
+4. **Disconnect When Done**: Remove integrations if you stop using their associated widgets
+
+<Tip>
+  Enable two-factor authentication on GitHub, Google, and Notion for an additional layer of security protecting your integrated accounts.
+</Tip>
+
+## Troubleshooting
+
+### Integration Not Working
+
+<AccordionGroup>
+  <Accordion title="Widget shows 'Connect Integration'">
+    The integration either hasn't been connected yet or the connection has expired. Click the "Integrate" button in the widget to reconnect.
+  </Accordion>
+  
+  <Accordion title="Data not updating">
+    - Check if the integration is still active in settings
+    - Try manually refreshing the widget
+    - Disconnect and reconnect the integration
+    - Verify the service itself is working (check GitHub/Google status)
+  </Accordion>
+  
+  <Accordion title="Authorization fails">
+    - Ensure you're logged into the correct account on the service
+    - Check if you've previously denied permissions
+    - Clear browser cookies and try again
+    - Verify the OAuth callback URL is not blocked by firewall/proxy
+  </Accordion>
+  
+  <Accordion title="Missing data in widgets">
+    - Confirm the integration has the necessary permissions
+    - Check if you've shared the required resources (for Notion)
+    - Verify filter settings aren't excluding the data
+    - Ensure your account has access to the data on the service side
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Explore Widgets" icon="grid-2" href="/features/widgets">
+    Discover all widgets and which integrations they require
+  </Card>
+  
+  <Card title="Customize Dashboard" icon="paintbrush" href="/features/customization">
+    Learn how to arrange and style your integrated widgets
+  </Card>
+</CardGroup>

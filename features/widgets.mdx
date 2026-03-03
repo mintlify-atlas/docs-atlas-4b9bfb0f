@@ -1,0 +1,231 @@
+---
+title: Widget System
+description: Add, configure, and manage widgets to build your perfect dashboard
+---
+
+## Overview
+
+Widgets are the building blocks of your Forge dashboard. Each widget provides specific functionality, from displaying GitHub activity to tracking tasks. You can add, remove, resize, and configure widgets to create a personalized workspace.
+
+## Available Widgets
+
+<CardGroup cols={2}>
+  <Card title="Bookmark" icon="bookmark">
+    Store and organize your frequently visited links with custom titles and automatic favicon detection.
+  </Card>
+  
+  <Card title="Clock" icon="clock">
+    Display the current time in a clean, customizable format.
+  </Card>
+  
+  <Card title="Countdown" icon="hourglass">
+    Track time remaining until important dates and events.
+  </Card>
+  
+  <Card title="Crypto" icon="bitcoin">
+    Monitor cryptocurrency prices with real-time updates and historical charts.
+  </Card>
+  
+  <Card title="Editor" icon="pen-to-square">
+    Create and edit notes with a built-in text editor supporting rich formatting.
+  </Card>
+  
+  <Card title="Frame" icon="window">
+    Embed external websites and web applications directly in your dashboard.
+  </Card>
+  
+  <Card title="GitHub" icon="github">
+    Track issues, pull requests, and repository activity from your GitHub account.
+  </Card>
+  
+  <Card title="GitHub Heatmap" icon="chart-simple">
+    Visualize your GitHub contribution activity over time.
+  </Card>
+  
+  <Card title="Inbox" icon="inbox">
+    Monitor your email inbox with Google integration.
+  </Card>
+  
+  <Card title="Kanban" icon="table-columns">
+    Organize tasks using a Kanban board with drag-and-drop functionality.
+  </Card>
+  
+  <Card title="Meetings" icon="calendar">
+    View upcoming meetings from your Google Calendar.
+  </Card>
+  
+  <Card title="Todo" icon="list-check">
+    Manage your tasks with a simple, focused todo list.
+  </Card>
+  
+  <Card title="Weather" icon="cloud-sun">
+    Check current weather conditions and forecasts for your location.
+  </Card>
+</CardGroup>
+
+## Adding Widgets
+
+<Steps>
+  <Step title="Enter Edit Mode">
+    Click the "Edit" button in the top navigation to enable widget editing.
+  </Step>
+  
+  <Step title="Open Widget Gallery">
+    Click the "Add Widget" button to view all available widgets.
+  </Step>
+  
+  <Step title="Select a Widget">
+    Browse the widget gallery and click on the widget you want to add to your dashboard.
+  </Step>
+  
+  <Step title="Position the Widget">
+    The widget appears on your dashboard. Drag it to your desired position on the grid.
+  </Step>
+  
+  <Step title="Exit Edit Mode">
+    Click "Done" to save your changes and exit edit mode.
+  </Step>
+</Steps>
+
+<Info>
+  Some widgets require integration with external services (like GitHub or Google) before they can be used. You'll be prompted to connect your account when adding these widgets.
+</Info>
+
+## Configuring Widgets
+
+Each widget has its own configuration options accessible through the widget header:
+
+<Tabs>
+  <Tab title="Widget Settings">
+    Click the menu icon in the widget header to access configuration options specific to that widget type. Common settings include:
+    
+    - **Display preferences**: Customize what information is shown
+    - **Refresh intervals**: Set how often data updates
+    - **Filters**: Control which items appear in the widget
+    - **Appearance**: Adjust colors, sizes, and visual styles
+  </Tab>
+  
+  <Tab title="Widget Sizing">
+    Widgets automatically adapt to different screen sizes:
+    
+    - **Desktop**: Full-size widgets with complete functionality
+    - **Tablet**: Responsive layouts optimized for medium screens
+    - **Mobile**: Stacked, single-column layout for small screens
+    
+    Each widget has predefined size options that work best for its content type.
+  </Tab>
+  
+  <Tab title="Widget Data">
+    Widgets with custom data (like Bookmarks, Todo, Editor) store their configuration including:
+    
+    - User-added content (bookmarks, tasks, notes)
+    - Display preferences
+    - Custom settings
+    
+    This data persists across sessions and is automatically saved.
+  </Tab>
+</Tabs>
+
+## Removing Widgets
+
+To remove a widget from your dashboard:
+
+<Steps>
+  <Step title="Enter Edit Mode">
+    Enable edit mode by clicking the "Edit" button in the navigation.
+  </Step>
+  
+  <Step title="Delete Widget">
+    Click the delete icon (trash can) in the widget header.
+  </Step>
+  
+  <Step title="Confirm Deletion">
+    Confirm that you want to remove the widget. This action is permanent.
+  </Step>
+</Steps>
+
+<Warning>
+  Deleting a widget removes all its configuration and data. For widgets like Editor or Bookmark, this means losing your saved content permanently.
+</Warning>
+
+## Widget Behavior
+
+### Edit Mode vs. View Mode
+
+<Tabs>
+  <Tab title="View Mode (Default)">
+    In view mode:
+    - Widgets are interactive and display live data
+    - You can click links, complete tasks, and interact with widget content
+    - Widgets cannot be moved or deleted
+    - The layout is locked to prevent accidental changes
+  </Tab>
+  
+  <Tab title="Edit Mode">
+    In edit mode:
+    - Widgets can be dragged to new positions
+    - Widget delete buttons are visible
+    - The grid overlay helps with precise positioning
+    - Some interactive features are disabled to prevent conflicts with drag operations
+  </Tab>
+</Tabs>
+
+### Auto-Save
+
+All widget changes are automatically saved:
+
+- Position updates save when you finish dragging
+- Configuration changes save immediately
+- Widget additions and deletions are instant
+- No manual save action required
+
+### Error Handling
+
+Widgets handle errors gracefully:
+
+- **Integration Required**: Widgets needing external accounts show a connection prompt
+- **Loading States**: Skeleton screens display while data loads
+- **Error Messages**: Clear error messages with retry options when data fails to load
+- **Fallback UI**: Widgets degrade gracefully when services are unavailable
+
+<Tip>
+  Organize related widgets together on your dashboard. For example, group all productivity widgets (Todo, Kanban, Meetings) in one area and information widgets (Weather, Crypto) in another.
+</Tip>
+
+## Widget-Specific Features
+
+### Bookmark Widget
+- Add unlimited bookmarks with custom titles
+- Automatic favicon detection
+- Drag-and-drop reordering
+- Quick access to frequently visited sites
+
+### GitHub Widgets
+- Filter by repository, labels, and status
+- Real-time updates for issues and pull requests
+- Contribution heatmap visualization
+- Direct links to GitHub for quick actions
+
+### Kanban Widget
+- Multiple columns with custom names
+- Drag-and-drop task management
+- Color-coded cards
+- Progress tracking
+
+### Editor Widget
+- Rich text editing with markdown support
+- Auto-save functionality
+- Syntax highlighting for code blocks
+- Full-screen mode for focused writing
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Customize Layout" icon="paintbrush" href="/features/customization">
+    Learn how to arrange widgets and customize your dashboard appearance
+  </Card>
+  
+  <Card title="Connect Integrations" icon="plug" href="/features/integrations">
+    Set up integrations with GitHub, Google, and other services
+  </Card>
+</CardGroup>

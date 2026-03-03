@@ -1,0 +1,205 @@
+---
+title: Todo Widget
+description: Manage your daily tasks with drag-and-drop functionality
+---
+
+The Todo widget provides a simple yet powerful task management system with checkboxes, drag-and-drop reordering, and optional daily auto-cleanup.
+
+## Features
+
+- **Task Management**: Create, check, and delete todos
+- **Drag & Drop**: Reorder tasks by priority
+- **Auto-Clear**: Optional automatic cleanup of old tasks
+- **Task Reminders**: Get notifications about pending todos
+- **Timestamp Tracking**: Automatically records creation time
+- **Quick Input**: Fast task entry with keyboard support
+
+## Setup
+
+No integration required—start adding tasks immediately!
+
+## Adding Tasks
+
+<Steps>
+  <Step title="Type Task">
+    Click in the input field at the bottom and type your task
+  </Step>
+  
+  <Step title="Submit">
+    Press Enter or click the forward arrow button
+  </Step>
+  
+  <Step title="Task Added">
+    The task appears in the list above
+  </Step>
+</Steps>
+
+## Usage
+
+### Task Display
+
+Each todo shows:
+- **Checkbox**: Click to mark complete/incomplete
+- **Task Text**: Description of the todo
+- **Delete Button**: Trash icon (appears on hover)
+
+### Completing Tasks
+
+Click anywhere on a task or its checkbox to:
+- Mark it as complete (strikethrough text)
+- Uncheck to mark as incomplete
+- Toggle state with each click
+
+### Deleting Tasks
+
+<Steps>
+  <Step title="Hover Over Task">
+    Move cursor over the task you want to delete
+  </Step>
+  
+  <Step title="Click Delete">
+    Click the trash icon that appears on the right
+  </Step>
+  
+  <Step title="Task Removed">
+    The task is deleted immediately
+  </Step>
+</Steps>
+
+### Reordering Tasks
+
+Drag and drop to prioritize:
+1. Click and hold on a task
+2. Drag it up or down
+3. Drop it in the new position
+4. Order saves automatically
+
+**Touch Support**: Long-press on mobile/tablet to start dragging.
+
+### Clearing All Tasks
+
+Click the eraser icon in the widget header to delete all todos at once.
+
+<Warning>
+  Clearing all tasks is permanent and cannot be undone. Make sure you've completed important tasks before clearing.
+</Warning>
+
+## Configuration Options
+
+### Todo Reminders
+
+Enable in your user settings:
+- Get notifications when you have pending todos
+- Shows count of incomplete tasks
+- Triggers once per session
+- Helps you stay on track
+
+### Auto-Delete Old Todos
+
+Enable in settings to automatically clear tasks from previous days:
+- Runs when you load the dashboard
+- Removes todos created before today
+- Keeps only today's tasks
+- Helps maintain a fresh daily task list
+
+<Note>
+  Auto-delete only triggers if you have pending todos from previous days. It won't trigger if all tasks are from today.
+</Note>
+
+## Task Tracking
+
+Each task stores:
+- **ID**: Unique identifier
+- **Text**: Task description
+- **Checked**: Completion status (true/false)
+- **Created At**: ISO timestamp of creation
+
+The creation timestamp is used for:
+- Determining if tasks are from previous days
+- Auto-delete functionality
+- Future features (sorting by age, etc.)
+
+## Keyboard Shortcuts
+
+- **Enter**: Submit new task
+- **Click**: Toggle task completion
+
+## Drag & Drop Details
+
+### Mouse Control
+
+- **Activation**: Click and drag (10px threshold)
+- **Visual Feedback**: Dragged task becomes semi-transparent
+- **Vertical Only**: Tasks move up and down only
+
+### Touch Control
+
+- **Activation**: Long-press for 250ms
+- **Tolerance**: 5px movement tolerance
+- **Mobile-Optimized**: Smooth experience on all devices
+
+## Best Practices
+
+**Start Each Day Fresh**: Clear yesterday's completed tasks
+
+**Prioritize**: Use drag-and-drop to put important tasks at the top
+
+**Be Specific**: Write clear, actionable task descriptions
+
+**Check Regularly**: Review and update your list throughout the day
+
+**Use Reminders**: Enable notifications to stay on top of pending tasks
+
+## Storage
+
+Todos are stored:
+- In widget configuration
+- Saved automatically on every change
+- Synced with your Forge account
+- Persisted across sessions and devices
+
+## Troubleshooting
+
+<Warning>
+  If todos aren't saving:
+  1. Check your internet connection
+  2. Refresh the page
+  3. Verify you're logged in
+  4. Contact support if issues persist
+</Warning>
+
+### Common Issues
+
+**Can't add tasks**: Make sure you've typed text in the input field.
+
+**Drag not working**: Click and hold (or long-press) before starting to drag.
+
+**Auto-delete not triggering**: Check that the setting is enabled and you have old tasks.
+
+**Tasks disappeared**: If auto-delete is enabled, tasks from previous days are automatically removed.
+
+## Notifications
+
+Todo reminder notifications show:
+- Number of pending (unchecked) tasks
+- Example: "You have 5 pending todos for today!"
+- Triggers once when you load the dashboard
+- Only if todo reminders are enabled in settings
+
+## Integration with Settings
+
+The widget respects these user settings:
+- **todoReminder**: Enable/disable task notifications
+- **deleteTodos**: Enable/disable auto-cleanup of old tasks
+
+Configure these in your user settings panel.
+
+## Widget Sizes
+
+- **Desktop**: 1 column × 2 rows
+- **Tablet**: 1 column × 2 rows
+- **Mobile**: 1 column × 1 row
+
+<Info>
+  The Todo widget is perfect for daily task management, quick to-do lists, shopping lists, or any checklist-style workflow.
+</Info>

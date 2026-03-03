@@ -1,0 +1,175 @@
+---
+title: Clock Widget
+description: Display current time with timezone support
+---
+
+The Clock widget shows the current time and date in large, readable format with full timezone and time format customization.
+
+## Features
+
+- **Real-Time Clock**: Updates every second
+- **Timezone Support**: Respects your timezone setting
+- **Time Format**: 12-hour or 24-hour display
+- **Date Display**: Full date with day of week and ordinal suffix
+- **Clean Design**: Large, easy-to-read monospaced font
+- **No Configuration Required**: Works immediately
+
+## Display Format
+
+### Time Display
+
+Shows time in your preferred format:
+- **24-hour**: 14:30:45 (default)
+- **12-hour**: 2:30:45 PM
+- **Seconds**: Always included
+- **Leading Zeros**: Automatic padding (e.g., 09:05:03)
+
+### Date Display
+
+Shows the full date in natural language:
+- **Format**: "Weekday, Month Day[th] Year"
+- **Example**: "Monday, March 3rd 2026"
+- **Ordinal Suffix**: 1st, 2nd, 3rd, 4th, etc.
+- **Full Names**: Complete weekday and month names
+
+## Configuration
+
+### Time Format
+
+Set in your user settings:
+- **12-hour**: Shows AM/PM
+- **24-hour**: Military time format
+
+The setting applies globally to all time displays in Forge.
+
+### Timezone
+
+Set in your user settings:
+- Supports all IANA timezone identifiers
+- Examples: `America/New_York`, `Europe/London`, `Asia/Tokyo`
+- Automatically handles daylight saving time
+- Updates immediately when changed
+
+<Info>
+  The timezone setting affects all widgets that display time, including the Clock, Meetings, and Weather widgets.
+</Info>
+
+## Usage
+
+The Clock widget is fully automated:
+- No buttons or controls
+- Updates every second
+- Automatically adjusts for timezone changes
+- Displays correct time even if device clock is wrong
+
+## Display Details
+
+### Typography
+
+- **Time**: 5xl font size, bold, monospaced
+- **Date**: Regular font, tertiary color
+- **Alignment**: Centered
+- **Spacing**: Comfortable vertical padding
+
+### Styling
+
+- **Text Color**: Primary (time) and tertiary (date)
+- **Font**: Monospaced for time (better readability)
+- **Layout**: Flexbox centered vertically and horizontally
+
+## Ordinal Suffix Logic
+
+Dates display with correct English ordinals:
+- **1st, 21st, 31st**: Numbers ending in 1 (except 11)
+- **2nd, 22nd**: Numbers ending in 2 (except 12)
+- **3rd, 23rd**: Numbers ending in 3 (except 13)
+- **4th-20th**: All other numbers
+- **11th, 12th, 13th**: Special cases
+
+## Time Accuracy
+
+The widget updates:
+- **Frequency**: Every 1000ms (1 second)
+- **Source**: Browser's system time
+- **Timezone Conversion**: Via JavaScript Intl API
+- **DST**: Automatically handled
+
+## Performance
+
+The Clock widget:
+- Uses minimal resources
+- Updates efficiently with React state
+- Cleans up timers on unmount
+- No network requests required
+
+## Use Cases
+
+**Quick Time Check**: Glance at time without opening other apps
+
+**Multi-Timezone**: Set different dashboards for different timezones
+
+**Always Visible**: Keep time displayed while working
+
+**Presentation Mode**: Large, readable time for screen sharing
+
+**World Clock**: Create multiple dashboard tabs with different timezone settings
+
+## Accessibility
+
+- Large, high-contrast text
+- Monospaced font for easy scanning
+- Clear visual hierarchy
+- Semantic HTML structure
+
+## Troubleshooting
+
+<Warning>
+  If the time is incorrect:
+  1. Check your device's system time
+  2. Verify timezone setting in user preferences
+  3. Refresh the page to reload settings
+  4. Check that your browser's timezone detection is working
+</Warning>
+
+### Common Issues
+
+**Wrong timezone**: Update timezone in your user settings.
+
+**Time not updating**: Refresh the page to restart the timer.
+
+**12/24 hour format**: Change time format setting in user preferences.
+
+**Date formatting**: The widget uses US English date formatting currently.
+
+## Technical Details
+
+**Update Mechanism**: JavaScript `setInterval` with 1000ms interval
+
+**Formatting API**: `Intl.DateTimeFormat` for locale-aware formatting
+
+**State Management**: React useState for current time
+
+**Cleanup**: useEffect cleanup function clears interval on unmount
+
+## Widget Sizes
+
+- **Desktop**: 1 column × 1 row
+- **Tablet**: 1 column × 1 row
+- **Mobile**: 1 column × 1 row
+
+<Note>
+  The Clock widget is compact and fits perfectly in a 1×1 grid space, making it ideal for filling small gaps in your dashboard layout.
+</Note>
+
+## Customization
+
+Currently, the widget uses:
+- System font for date
+- Monospace font for time
+- Theme colors (primary and tertiary)
+
+Future versions may add:
+- Font selection
+- Color customization  
+- Optional seconds display toggle
+- Locale-based date formatting

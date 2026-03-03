@@ -1,0 +1,219 @@
+---
+title: Markdown Editor Widget
+description: Create and edit notes with Tiptap-powered rich text editing
+---
+
+The Markdown Editor widget (also called "Notes" or "Editor") provides a full-featured note-taking experience with rich text editing, Notion import, and emoji support.
+
+## Features
+
+- **Rich Text Editing**: Powered by Tiptap editor
+- **Multiple Notes**: Create and manage unlimited notes
+- **Notion Integration**: Import pages directly from Notion
+- **Emoji Support**: Add emojis to personalize notes
+- **Auto-Save**: Notes save automatically as you type
+- **Search & Filter**: Quickly find notes
+- **Last Updated Tracking**: See when each note was last modified
+- **Drag & Drop**: Reorder notes by dragging
+
+## Setup
+
+<Steps>
+  <Step title="Add Widget">
+    Add the Editor widget to your dashboard
+  </Step>
+  
+  <Step title="Create First Note">
+    Click the plus icon to create a new note
+  </Step>
+  
+  <Step title="Start Writing">
+    Use the Tiptap editor for rich text formatting
+  </Step>
+</Steps>
+
+## Creating Notes
+
+### New Note
+
+<Steps>
+  <Step title="Click Plus Icon">
+    Click the + button in the widget header
+  </Step>
+  
+  <Step title="Add Title">
+    Enter a note title
+  </Step>
+  
+  <Step title="Choose Emoji (Optional)">
+    Select an emoji icon for the note
+  </Step>
+  
+  <Step title="Write Content">
+    Use the rich text editor to write your note
+  </Step>
+  
+  <Step title="Auto-Save">
+    Changes save automatically
+  </Step>
+</Steps>
+
+### Import from Notion
+
+<Steps>
+  <Step title="Connect Notion">
+    Click the import icon and connect your Notion account
+  </Step>
+  
+  <Step title="Grant Permissions">
+    Approve access to your Notion workspace
+  </Step>
+  
+  <Step title="Browse Pages">
+    View your Notion pages in a hierarchical tree
+  </Step>
+  
+  <Step title="Select Page">
+    Click on a page to import its content
+  </Step>
+  
+  <Step title="Edit Imported Note">
+    The imported note opens automatically for editing
+  </Step>
+</Steps>
+
+## Note Management
+
+### Note List
+
+Notes are displayed as cards showing:
+- **Emoji**: Custom emoji icon (if set)
+- **Title**: Note title
+- **Preview**: First few lines of content
+- **Last Updated**: When the note was last modified
+
+### Sorting
+
+Notes are automatically sorted by last updated time (newest first).
+
+### Opening Notes
+
+Click any note card to open the full editor dialog with:
+- Title editing
+- Emoji selection
+- Rich text editor (Tiptap)
+- Save and delete options
+- Notion sync status (if imported)
+
+### Deleting Notes
+
+To delete a note:
+1. Open the note
+2. Click the delete button
+3. Confirm deletion
+
+## Tiptap Editor
+
+The editor supports:
+- **Text formatting**: Bold, italic, underline, strikethrough
+- **Headings**: H1, H2, H3, etc.
+- **Lists**: Bullet points and numbered lists
+- **Links**: Add hyperlinks
+- **Code blocks**: Inline code and code blocks
+- **Blockquotes**: Quote text
+- **Tables**: Create tables
+- **And more**: Full Tiptap feature set
+
+## Notion Integration
+
+### Connecting Notion
+
+The first time you import:
+1. Click the import icon
+2. Click "Connect Notion"
+3. Authorize Forge to access your Notion workspace
+4. Grant permissions for the pages you want to access
+
+### Page Hierarchy
+
+The import dialog shows:
+- **Top-level pages**: Main workspace pages
+- **Child pages**: Nested pages indented below parents
+- **Page titles**: Full page names from Notion
+
+### Import Process
+
+When you import a page:
+- Page content is converted to Tiptap format
+- Original Notion formatting is preserved where possible
+- Notion blocks are mapped to editor blocks
+- Import metadata is saved (page ID, sync date)
+
+### Sync Status
+
+Imported notes show:
+- **Page ID**: Link to original Notion page
+- **Last Synced**: When the import happened
+- **Page Title**: Original Notion page title
+
+<Note>
+  Imported notes are a one-time copy. Changes in Forge don't sync back to Notion, and changes in Notion don't auto-update in Forge.
+</Note>
+
+## Configuration
+
+The widget stores:
+- **Note ID**: Unique identifier
+- **Title**: Note title
+- **Content**: Tiptap JSON content
+- **Emoji**: Selected emoji character
+- **Last Updated**: Timestamp of last edit
+- **Notion Sync**: Import metadata (if applicable)
+
+## Storage
+
+All notes are stored in the widget configuration:
+- Saved automatically on every change
+- Persisted across sessions
+- No external database required
+- Backed up with your Forge account
+
+## Troubleshooting
+
+<Warning>
+  If Notion import fails:
+  1. Check that you granted the correct permissions
+  2. Verify the page is shared with the Forge integration
+  3. Try reconnecting your Notion account
+  4. Some complex Notion blocks may not import perfectly
+</Warning>
+
+### Common Issues
+
+**Notes not saving**: Check your internet connection and try refreshing.
+
+**Notion pages not showing**: Make sure pages are shared with the integration in Notion.
+
+**Import formatting issues**: Some advanced Notion blocks may convert to simpler formats in Tiptap.
+
+**Slow loading**: Normal for many notes with lots of content. Consider archiving old notes.
+
+## Integration Details
+
+**Notion API Version**: 2022-06-28
+
+**Endpoints Used**:
+- `/api/notion/pages` - List accessible pages
+- `/api/notion/pages/{id}` - Get page content
+
+**Block Conversion**: Notion blocks are converted to Tiptap JSON format using a custom converter.
+
+## Widget Sizes
+
+- **Desktop**: 1 column × 2 rows
+- **Tablet**: 1 column × 2 rows
+- **Mobile**: 1 column × 2 rows
+
+<Info>
+  The Editor widget is perfect for quick notes, documentation drafts, meeting notes, or any text you want to keep handy in your dashboard.
+</Info>

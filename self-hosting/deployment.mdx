@@ -1,0 +1,558 @@
+---
+title: 'Deployment'
+description: 'Deploy Forge to production on various platforms'
+---
+
+This guide covers deploying Forge to various hosting platforms. Forge is a Next.js application that requires Node.js, PostgreSQL, Redis, and blob storage.
+
+## Pre-Deployment Checklist
+
+Before deploying, ensure you have:
+
+- [ ] PostgreSQL database provisioned and accessible
+- [ ] Redis instance (Upstash recommended) set up
+- [ ] Blob storage configured (Vercel Blob or S3-compatible)
+- [ ] All required environment variables ready
+- [ ] OAuth applications created for integrations (GitHub, Google, etc.)
+- [ ] Domain name configured (for production)
+- [ ] SSL certificate (most platforms provide this automatically)
+
+<Note>
+Forge uses Next.js 16 which requires Node.js v18 or later. Ensure your hosting platform supports this version.
+</Note>
+
+## Vercel
+
+Vercel is the recommended platform for deploying Next.js applications and offers the simplest deployment experience.
+
+<Steps>
+  <Step title="Prepare your repository">
+    Push your Forge code to a Git repository (GitHub, GitLab, or Bitbucket).
+
+    ```bash
+    git add .
+    git commit -m "Prepare for deployment"
+    git push origin main
+    ```
+  </Step>
+
+  <Step title="Create a new Vercel project">
+    1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
+    2. Click "Add New" > "Project"
+    3. Import your Git repository
+    4. Vercel will automatically detect it's a Next.js project
+  </Step>
+
+  <Step title="Configure environment variables">
+    In the Vercel project settings, add all required environment variables:
+
+    - `NEXT_PUBLIC_APP_URL` - Your production URL (e.g., `https://forge.yourdomain.com`)
+    - `BETTER_AUTH_SECRET` - Generate with `openssl rand -base64 32`
+    - `BETTER_AUTH_URL` - Same as `NEXT_PUBLIC_APP_URL`
+    - `DATABASE_URI` - Your PostgreSQL connection string
+    - `UPSTASH_REDIS_REST_URL` - From Upstash dashboard
+    - `UPSTASH_REDIS_REST_TOKEN` - From Upstash dashboard
+    - `BLOB_READ_WRITE_TOKEN` - From Vercel Blob storage
+    - Optional: OAuth credentials (GitHub, Google, Notion, Coinbase)
+
+    <Warning>
+    Don't forget to update OAuth callback URLs to match your production domain:
+    - GitHub: `https://yourdomain.com/api/auth/callback/github`
+    - Google: `https://yourdomain.com/api/auth/callback/google`
+    - Notion: `https://yourdomain.com/api/auth/callback/notion`
+    </Warning>
+  </Step>
+
+  <Step title="Set up Vercel Postgres (optional)">
+    If you don't have a PostgreSQL database yet:
+
+    1. Go to your Vercel project > Storage
+    2. Create a new Postgres database
+    3. Vercel will automatically add the `DATABASE_URI` environment variable
+  </Step>
+
+  <Step title="Set up Vercel Blob Storage">
+    1. Go to your Vercel project > Storage
+    2. Create a new Blob store
+    3. Vercel will automatically add the `BLOB_READ_WRITE_TOKEN` environment variable
+  </Step>
+
+  <Step title="Deploy">
+    Click "Deploy" and Vercel will:
+    1. Build your application
+    2. Run the build process with React Compiler optimizations
+    3. Deploy to a global CDN
+    4. Provide you with a production URL
+
+    The deployment typically takes 2-3 minutes.
+  </Step>
+
+  <Step title="Run database migrations">
+    After deployment, run migrations using Vercel CLI:
+
+    ```bash
+    # Install Vercel CLI if you haven't
+    npm i -g vercel
+
+    # Link your project
+    vercel link
+
+    # Run migrations
+    vercel env pull .env.production
+    npx drizzle-kit push
+    ```
+
+    Alternatively, you can run migrations from a build script by adding to `package.json`:
+    ```json
+    {
+      "scripts": {
+        "vercel-build": "npx drizzle-kit push && next build"
+      }
+    }
+    ```
+  </Step>
+</Steps>
+
+## Railway
+
+Railway provides an excellent platform for deploying full-stack applications with built-in PostgreSQL.
+
+<Steps>
+  <Step title="Create a new Railway project">
+    1. Go to [Railway](https://railway.app/)
+    2. Click "New Project"
+    3. Select "Deploy from GitHub repo"
+    4. Choose your Forge repository
+  </Step>
+
+  <Step title="Add PostgreSQL database">
+    1. Click "New" in your Railway project
+    2. Select "Database" > "PostgreSQL"
+    3. Railway will provision a database and provide connection details
+  </Step>
+
+  <Step title="Add Redis database">
+    While Railway can provide Redis, Upstash is recommended for better reliability:
+
+    1. Create a Redis database on [Upstash](https://console.upstash.com/)
+    2. Copy the REST URL and token
+  </Step>
+
+  <Step title="Configure environment variables">
+    In your Railway service settings, add:
+
+    ```bash
+    NEXT_PUBLIC_APP_URL=${{RAILWAY_PUBLIC_DOMAIN}}
+    BETTER_AUTH_URL=${{RAILWAY_PUBLIC_DOMAIN}}
+    BETTER_AUTH_SECRET=your-secret-here
+    DATABASE_URI=${{DATABASE_URL}}
+    UPSTASH_REDIS_REST_URL=your-upstash-url
+    UPSTASH_REDIS_REST_TOKEN=your-upstash-token
+    BLOB_READ_WRITE_TOKEN=your-blob-token
+    ```
+
+    <Note>
+    Railway provides `${{DATABASE_URL}}` automatically when you add a PostgreSQL database. `${{RAILWAY_PUBLIC_DOMAIN}}` is also automatically provided.
+    </Note>
+  </Step>
+
+  <Step title="Configure build settings">
+    Railway should auto-detect Next.js. Verify these settings:
+
+    - **Build Command**: `npm run build`
+    - **Start Command**: `npm run start`
+    - **Node Version**: 18 or higher
+  </Step>
+
+  <Step title="Deploy">
+    Railway will automatically deploy when you push to your main branch.
+
+    Monitor the deployment in the Railway dashboard.
+  </Step>
+
+  <Step title="Run database migrations">
+    In the Railway dashboard:
+
+    1. Go to your service > Settings
+    2. Add a deploy script:
+       ```json
+       {
+         "scripts": {
+           "build": "npx drizzle-kit push && next build"
+         }
+       }
+       ```
+
+    Or run manually using Railway CLI:
+    ```bash
+    railway run npx drizzle-kit push
+    ```
+  </Step>
+</Steps>
+
+## Docker
+
+Deploy Forge using Docker for maximum portability.
+
+<Steps>
+  <Step title="Create a Dockerfile">
+    Create a `Dockerfile` in your Forge root directory:
+
+    ```dockerfile Dockerfile
+    FROM node:20-alpine AS base
+
+    # Install dependencies only when needed
+    FROM base AS deps
+    RUN apk add --no-cache libc6-compat
+    WORKDIR /app
+
+    COPY package.json package-lock.json* ./
+    RUN npm ci
+
+    # Rebuild the source code only when needed
+    FROM base AS builder
+    WORKDIR /app
+    COPY --from=deps /app/node_modules ./node_modules
+    COPY . .
+
+    ENV NEXT_TELEMETRY_DISABLED 1
+
+    RUN npm run build
+
+    # Production image, copy all the files and run next
+    FROM base AS runner
+    WORKDIR /app
+
+    ENV NODE_ENV production
+    ENV NEXT_TELEMETRY_DISABLED 1
+
+    RUN addgroup --system --gid 1001 nodejs
+    RUN adduser --system --uid 1001 nextjs
+
+    COPY --from=builder /app/public ./public
+
+    # Set the correct permission for prerender cache
+    RUN mkdir .next
+    RUN chown nextjs:nodejs .next
+
+    COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+    COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+    USER nextjs
+
+    EXPOSE 3000
+
+    ENV PORT 3000
+    ENV HOSTNAME "0.0.0.0"
+
+    CMD ["node", "server.js"]
+    ```
+  </Step>
+
+  <Step title="Update next.config.ts">
+    Enable standalone output mode in `next.config.ts`:
+
+    ```typescript next.config.ts
+    import type { NextConfig } from "next"
+    import { withPlausibleProxy } from "next-plausible"
+
+    const nextConfig: NextConfig = {
+        reactCompiler: true,
+        output: 'standalone', // Add this line
+        images: {
+            qualities: [100, 75]
+        },
+        skipTrailingSlashRedirect: true,
+    }
+
+    export default withPlausibleProxy({
+        customDomain: "https://analytics.ahsmus.com",
+    })(nextConfig)
+    ```
+  </Step>
+
+  <Step title="Create docker-compose.yml">
+    For local testing with all services:
+
+    ```yaml docker-compose.yml
+    version: '3.8'
+
+    services:
+      forge:
+        build: .
+        ports:
+          - "3000:3000"
+        environment:
+          - NEXT_PUBLIC_APP_URL=http://localhost:3000
+          - BETTER_AUTH_URL=http://localhost:3000
+          - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+          - DATABASE_URI=postgresql://postgres:password@postgres:5432/forge
+          - UPSTASH_REDIS_REST_URL=${UPSTASH_REDIS_REST_URL}
+          - UPSTASH_REDIS_REST_TOKEN=${UPSTASH_REDIS_REST_TOKEN}
+          - BLOB_READ_WRITE_TOKEN=${BLOB_READ_WRITE_TOKEN}
+        depends_on:
+          - postgres
+
+      postgres:
+        image: postgres:16-alpine
+        environment:
+          - POSTGRES_DB=forge
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=password
+        volumes:
+          - postgres-data:/var/lib/postgresql/data
+        ports:
+          - "5432:5432"
+
+    volumes:
+      postgres-data:
+    ```
+  </Step>
+
+  <Step title="Build and run">
+    ```bash
+    # Build the image
+    docker build -t forge .
+
+    # Run with docker-compose
+    docker-compose up -d
+
+    # Run migrations
+    docker-compose exec forge npx drizzle-kit push
+    ```
+  </Step>
+</Steps>
+
+## Manual VPS Deployment
+
+Deploy on any VPS (DigitalOcean, Linode, AWS EC2, etc.) using PM2 for process management.
+
+<Steps>
+  <Step title="Set up your server">
+    Ensure your server has:
+
+    ```bash
+    # Update system
+    sudo apt update && sudo apt upgrade -y
+
+    # Install Node.js 20
+    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+    sudo apt install -y nodejs
+
+    # Install PostgreSQL
+    sudo apt install -y postgresql postgresql-contrib
+
+    # Install PM2 globally
+    sudo npm install -g pm2
+    ```
+  </Step>
+
+  <Step title="Set up PostgreSQL">
+    ```bash
+    # Create database and user
+    sudo -u postgres psql
+    CREATE DATABASE forge;
+    CREATE USER forgeuser WITH PASSWORD 'yourpassword';
+    GRANT ALL PRIVILEGES ON DATABASE forge TO forgeuser;
+    \q
+    ```
+  </Step>
+
+  <Step title="Clone and build">
+    ```bash
+    # Clone repository
+    git clone https://github.com/mvriu5/forge.git
+    cd forge
+
+    # Install dependencies
+    npm install
+
+    # Create .env file
+    nano .env
+    # Add all environment variables
+
+    # Run migrations
+    npx drizzle-kit push
+
+    # Build for production
+    npm run build
+    ```
+  </Step>
+
+  <Step title="Configure PM2">
+    Create `ecosystem.config.js`:
+
+    ```javascript ecosystem.config.js
+    module.exports = {
+      apps: [{
+        name: 'forge',
+        script: 'npm',
+        args: 'start',
+        env: {
+          NODE_ENV: 'production',
+          PORT: 3000
+        }
+      }]
+    }
+    ```
+
+    Start the application:
+    ```bash
+    pm2 start ecosystem.config.js
+    pm2 save
+    pm2 startup
+    ```
+  </Step>
+
+  <Step title="Set up Nginx reverse proxy">
+    ```nginx
+    server {
+        listen 80;
+        server_name yourdomain.com;
+
+        location / {
+            proxy_pass http://localhost:3000;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+    }
+    ```
+
+    Enable and configure SSL:
+    ```bash
+    sudo apt install certbot python3-certbot-nginx
+    sudo certbot --nginx -d yourdomain.com
+    ```
+  </Step>
+</Steps>
+
+## Post-Deployment
+
+### Verify Installation
+
+After deployment, check:
+
+- [ ] Application loads at your production URL
+- [ ] Can create an account
+- [ ] Can create dashboards and widgets
+- [ ] OAuth integrations work (GitHub, Google, etc.)
+- [ ] File uploads work (profile pictures)
+- [ ] Real-time notifications work
+
+### Monitoring
+
+Set up monitoring for:
+
+- **Application logs** - Check for errors
+- **Database connections** - Monitor connection pool
+- **Redis** - Track memory usage
+- **Uptime** - Use services like UptimeRobot
+- **Performance** - Use Vercel Analytics or Plausible
+
+### Backups
+
+Ensure regular backups of:
+
+1. **PostgreSQL database**
+   ```bash
+   # Backup
+   pg_dump -U forgeuser forge > forge_backup.sql
+
+   # Restore
+   psql -U forgeuser forge < forge_backup.sql
+   ```
+
+2. **Environment variables** - Store securely in a password manager
+3. **Blob storage** - Configure automatic backups on your storage platform
+
+### Updates
+
+To update your Forge instance:
+
+<CodeGroup>
+```bash Vercel
+git pull origin main
+git push
+# Vercel auto-deploys
+```
+
+```bash Railway
+git pull origin main
+git push
+# Railway auto-deploys
+```
+
+```bash VPS
+cd forge
+git pull
+npm install
+npx drizzle-kit push  # Run migrations if needed
+npm run build
+pm2 restart forge
+```
+
+```bash Docker
+git pull
+docker-compose down
+docker-compose build
+docker-compose up -d
+docker-compose exec forge npx drizzle-kit push
+```
+</CodeGroup>
+
+## Troubleshooting
+
+### Build Failures
+
+**Issue**: Build fails with "Cannot find module"
+
+**Solution**: Clear cache and reinstall dependencies
+```bash
+rm -rf node_modules .next
+npm install
+npm run build
+```
+
+### Database Connection Issues
+
+**Issue**: "Connection refused" or timeout errors
+
+**Solution**:
+- Verify `DATABASE_URI` is correct
+- Check firewall rules allow connections
+- Ensure database is running and accessible
+- For cloud databases, whitelist your deployment IP
+
+### OAuth Callback Errors
+
+**Issue**: "Redirect URI mismatch"
+
+**Solution**: Update OAuth app callback URLs to match production domain:
+- GitHub: `https://yourdomain.com/api/auth/callback/github`
+- Google: `https://yourdomain.com/api/auth/callback/google`
+- Notion: `https://yourdomain.com/api/auth/callback/notion`
+
+### Performance Issues
+
+**Issue**: Slow page loads
+
+**Solution**:
+- Enable Redis caching
+- Check database query performance
+- Optimize images (Next.js does this automatically)
+- Use a CDN for static assets
+- Monitor server resources (CPU, memory)
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Environment Variables" icon="gear" href="/self-hosting/environment-variables">
+    Complete environment variable reference
+  </Card>
+  <Card title="Setup Guide" icon="wrench" href="/self-hosting/setup">
+    Initial setup and configuration
+  </Card>
+</CardGroup>

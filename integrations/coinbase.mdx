@@ -1,0 +1,196 @@
+---
+title: Coinbase OAuth Integration
+description: Connect Coinbase to display crypto prices and charts in your dashboard
+---
+
+The Coinbase integration allows you to connect to the Coinbase Exchange API to display real-time cryptocurrency prices, historical charts, and market data directly in your Forge dashboard.
+
+## What it enables
+
+Connecting Coinbase enables crypto-related widgets:
+
+- **Crypto Price Widgets**: Display real-time prices for BTC, ETH, SOL, and other cryptocurrencies
+- **Price Charts**: View historical price data with multiple timeframes (1h, 24h, 1w, 1m, 3m, 6m, 1y)
+- **Currency Lists**: Browse all available cryptocurrencies on Coinbase Exchange
+- **Custom Watchlists**: Track your favorite crypto assets
+
+<Info>
+  This integration uses the **Coinbase Exchange API** (also known as Coinbase Pro API), which is different from the retail Coinbase API.
+</Info>
+
+## Setup Instructions
+
+<Steps>
+  <Step title="Create a Coinbase Account">
+    1. Sign up for a [Coinbase](https://www.coinbase.com/) account if you don't have one
+    2. Complete identity verification if required
+    3. Navigate to [Coinbase Exchange](https://exchange.coinbase.com/) (Coinbase Pro)
+  </Step>
+
+  <Step title="Generate API Keys">
+    1. Log into [Coinbase Exchange](https://exchange.coinbase.com/)
+    2. Navigate to **API** settings
+    3. Click **New API Key**
+    4. Configure the API key:
+       - **Nickname**: `Forge Dashboard` (or your preferred name)
+       - **Passphrase**: Create a secure passphrase (you'll need this)
+       - **Permissions**: Select **View** (read-only access is sufficient)
+    5. Click **Create API Key**
+    6. Save your **API Key**, **API Secret**, and **Passphrase**
+
+    <Warning>
+      The API Secret is only shown once. Store it securely immediately. You'll need all three values: Key, Secret, and Passphrase.
+    </Warning>
+  </Step>
+
+  <Step title="Add Environment Variables">
+    Add the following variables to your `.env` file:
+
+    <CodeGroup>
+    ```bash .env
+    COINBASE_CLIENT_ID=your_api_key_here
+    COINBASE_CLIENT_SECRET=your_api_secret_here
+    ```
+    </CodeGroup>
+
+    <Info>
+      Despite the variable names using "CLIENT_ID" and "CLIENT_SECRET", these correspond to your Coinbase API Key and API Secret respectively. The passphrase is included in the secret for Forge's implementation.
+    </Info>
+
+    <Warning>
+      Keep your API credentials secure. Never commit them to version control. Ensure `.env` is in your `.gitignore` file.
+    </Warning>
+  </Step>
+
+  <Step title="Restart Your Application">
+    Restart your Forge application to load the new environment variables:
+
+    <CodeGroup>
+    ```bash npm
+    npm run dev
+    ```
+
+    ```bash yarn
+    yarn dev
+    ```
+
+    ```bash pnpm
+    pnpm dev
+    ```
+    </CodeGroup>
+  </Step>
+</Steps>
+
+## Authentication Method
+
+Coinbase Exchange uses **HMAC-SHA256 authentication** rather than traditional OAuth. Forge handles this automatically:
+
+1. For each API request, Forge generates a timestamp
+2. Creates a signature using your API Secret (base64-decoded)
+3. Includes the signature in request headers:
+   - `CB-ACCESS-KEY`: Your API Key
+   - `CB-ACCESS-SIGN`: HMAC signature
+   - `CB-ACCESS-TIMESTAMP`: Request timestamp
+   - `CB-ACCESS-PASSPHRASE`: Your API passphrase
+
+<Info>
+  All authentication is handled server-side. Your API credentials never leave your Forge instance.
+</Info>
+
+## Available Features
+
+### Fetch Crypto Prices
+
+Forge can fetch real-time and historical price data for any trading pair on Coinbase Exchange:
+
+- **Default pairs**: BTC-USD, ETH-USD, SOL-USD
+- **Custom pairs**: Any valid Coinbase trading pair (e.g., DOGE-USD, MATIC-USD)
+- **Timeframes**: 1h, 24h, 1w, 1m, 3m, 6m, 1y
+
+Price data includes:
+- Current price (latest close)
+- Percent change over the timeframe
+- OHLC (Open, High, Low, Close) candlestick data
+
+### Browse Currencies
+
+Fetch a list of all available cryptocurrencies:
+
+- Filters to show only "online" cryptocurrencies
+- Sorted alphabetically by currency ID
+- Includes currency name and ID
+
+## API Endpoints Used
+
+Forge makes requests to these Coinbase Exchange API endpoints:
+
+- `GET /products/{product-id}/candles` - Fetch historical price candles
+- `GET /currencies` - List all available currencies
+
+Base URL: `https://api.exchange.coinbase.com`
+
+## Rate Limits
+
+Coinbase Exchange API has rate limits:
+
+- **Public endpoints**: 3 requests per second
+- **Private endpoints**: 5 requests per second
+
+Forge implements appropriate caching (`cache: "no-store"`) to ensure fresh data while respecting rate limits.
+
+## Troubleshooting
+
+### Invalid Signature Error
+
+If you see "Invalid signature" errors:
+
+- Verify your `COINBASE_CLIENT_SECRET` is the base64-encoded API Secret from Coinbase
+- Ensure your API Key (`COINBASE_CLIENT_ID`) is correct
+- Check that your system clock is synchronized (signatures are time-sensitive)
+
+### Unauthorized / 401 Errors
+
+If requests fail with 401 Unauthorized:
+
+- Confirm your API Key has **View** permissions enabled
+- Verify the API Key is still active in Coinbase Exchange settings
+- Check that you're using the Exchange API credentials, not regular Coinbase API credentials
+
+### Unable to Load Price Data
+
+If price data fails to load:
+
+- Verify the trading pair exists on Coinbase Exchange (e.g., "BTC-USD")
+- Check that the API endpoints are accessible from your server
+- Review your application logs for specific error messages
+
+### Missing Currencies
+
+If certain currencies don't appear:
+
+- Only "online" crypto currencies are shown
+- The currency must be available on Coinbase Exchange
+- Some currencies may be delisted or temporarily offline
+
+## Security Best Practices
+
+<Warning>
+  - Use **View-only** API keys (no trading permissions needed)
+  - Rotate API keys periodically
+  - Never share your API Secret or Passphrase
+  - Use IP whitelisting in Coinbase if available
+  - Monitor API key usage in Coinbase Exchange settings
+</Warning>
+
+## Data Privacy
+
+The Coinbase integration:
+
+- Does not require personal trading data access
+- Only fetches public market data
+- Operates entirely server-side within your Forge instance
+- Does not share data with third parties
+
+<Info>
+  Since this integration uses view-only access to public market data, no sensitive financial information is accessed or stored.
+</Info>

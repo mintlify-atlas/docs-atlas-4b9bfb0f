@@ -1,0 +1,150 @@
+---
+title: GitHub OAuth Integration
+description: Connect GitHub to track repositories, issues, and pull requests
+---
+
+The GitHub OAuth integration allows you to connect your GitHub account to Forge, enabling repository browsing, issue tracking, and contribution visualization directly from your dashboard.
+
+## What it enables
+
+Connecting your GitHub account unlocks these widgets:
+
+- **GitHub Widget**: Browse repositories, track issues and pull requests
+- **GitHub Heatmap**: Visualize your contribution activity over time
+
+## Required OAuth Scopes
+
+Forge requests the following scopes from GitHub:
+
+- `repo` - Full control of private repositories (read access to public and private repos)
+- `user:email` - Access to read your email addresses
+
+<Info>
+  The `repo` scope is required to access both public and private repository data. If you prefer to limit access to public repositories only, you'll need to modify the source code.
+</Info>
+
+## Setup Instructions
+
+<Steps>
+  <Step title="Create a GitHub OAuth App">
+    1. Go to your GitHub account settings
+    2. Navigate to **Developer settings > OAuth Apps**
+    3. Click **New OAuth App** or [create one directly](https://github.com/settings/applications/new)
+  </Step>
+
+  <Step title="Configure OAuth App Settings">
+    Fill in the application details:
+
+    - **Application name**: `Forge` (or your preferred name)
+    - **Homepage URL**: 
+      - Development: `http://localhost:3000`
+      - Production: `https://yourdomain.com`
+    - **Application description**: Optional description of your Forge instance
+    - **Authorization callback URL**:
+      - Development: `http://localhost:3000/api/auth/callback/github`
+      - Production: `https://yourdomain.com/api/auth/callback/github`
+
+    <Warning>
+      The callback URL must exactly match your application's URL. Mismatched URLs will cause authorization to fail.
+    </Warning>
+  </Step>
+
+  <Step title="Generate Client Secret">
+    1. After creating the app, you'll see your **Client ID**
+    2. Click **Generate a new client secret**
+    3. Copy both the **Client ID** and **Client Secret** immediately
+
+    <Warning>
+      The Client Secret is only shown once. Store it securely before leaving the page.
+    </Warning>
+  </Step>
+
+  <Step title="Add Environment Variables">
+    Add the following variables to your `.env` file:
+
+    <CodeGroup>
+    ```bash .env
+    GITHUB_CLIENT_ID=your_github_client_id_here
+    GITHUB_CLIENT_SECRET=your_github_client_secret_here
+    ```
+    </CodeGroup>
+
+    <Warning>
+      Never commit your `.env` file to version control. Ensure `.env` is in your `.gitignore` file.
+    </Warning>
+  </Step>
+
+  <Step title="Restart Your Application">
+    Restart your Forge application to load the new environment variables:
+
+    <CodeGroup>
+    ```bash npm
+    npm run dev
+    ```
+
+    ```bash yarn
+    yarn dev
+    ```
+
+    ```bash pnpm
+    pnpm dev
+    ```
+    </CodeGroup>
+  </Step>
+</Steps>
+
+## Connect Your Account
+
+Once the OAuth app is configured:
+
+1. Open your Forge dashboard and go to **Settings**
+2. Click **Connect GitHub Account**
+3. Authorize the application with the requested scopes
+4. You'll be redirected back to Forge with your account connected
+
+## Account Linking
+
+GitHub is configured as a trusted provider for account linking in Forge. This means:
+
+- You can link your GitHub account to an existing Forge account
+- Multiple OAuth providers can be connected to the same user account
+- GitHub can be used as a sign-in method if configured
+
+<Info>
+  Forge uses BetterAuth for authentication with account linking enabled for GitHub, Google, and Notion.
+</Info>
+
+## Managing Your Connection
+
+From the Settings page, you can:
+
+- **View connection status**: See if your GitHub account is linked
+- **Disconnect**: Remove the integration and revoke access tokens
+- **Reconnect**: Re-authorize if tokens become invalid
+
+## Troubleshooting
+
+### Authorization Failed
+
+If authorization fails during connection:
+
+- Verify the **Authorization callback URL** in your GitHub OAuth App matches exactly
+- Check that `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` are correctly set in `.env`
+- Ensure your application is running on the same URL as the callback URL
+
+### Missing Repository Data
+
+If you can't see certain repositories:
+
+- Verify the `repo` scope is included in your authorization
+- For organization repositories, you may need to grant organization access during authorization
+- Disconnect and reconnect to refresh permissions
+
+### Rate Limiting
+
+GitHub has API rate limits:
+
+- **Authenticated requests**: 5,000 requests per hour per user
+- **Unauthenticated requests**: 60 requests per hour per IP
+
+Forge uses authenticated requests, so rate limits should rarely be an issue for personal use.

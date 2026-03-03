@@ -1,0 +1,162 @@
+---
+title: GitHub Widget
+description: Track GitHub issues and pull requests across all your repositories
+---
+
+The GitHub widget displays your assigned issues and pull requests from all repositories you have access to, including personal and organization repositories.
+
+## Features
+
+- **Issues Tracking**: View all issues assigned to you
+- **Pull Requests**: Monitor PRs you're assigned to
+- **Multi-Repository**: Aggregates across all your repos and organizations
+- **Search & Filter**: Search by title or repository name
+- **Label Filtering**: Filter issues by labels
+- **Status Notifications**: Get reminders about pending items
+- **Tabbed Interface**: Switch between issues and pull requests
+
+## Setup
+
+<Steps>
+  <Step title="Connect GitHub Account">
+    Click the widget and authenticate with your GitHub account
+  </Step>
+  
+  <Step title="Grant Permissions">
+    Approve repository and organization access permissions
+  </Step>
+  
+  <Step title="View Items">
+    The widget automatically loads all issues and PRs assigned to you
+  </Step>
+</Steps>
+
+## Configuration
+
+### Repository Access
+
+The widget fetches data from:
+- Personal repositories
+- Organization repositories you're a member of
+- All repositories where you're assigned to issues or PRs
+
+### Filtering Options
+
+**By Labels** (Issues tab only):
+- Click the filter icon to see all labels
+- Check/uncheck labels to show/hide issues
+- Multiple labels can be selected
+- Color-coded label badges
+
+**By Search**:
+- Search bar filters by:
+  - Issue/PR title
+  - Repository name
+- Real-time filtering as you type
+
+### Notifications
+
+Enable GitHub reminders in your settings to receive notifications when you have pending issues or pull requests.
+
+## Usage
+
+### Viewing Issues
+
+Each issue card displays:
+- **Status Icon**: Circle icon indicating open status
+- **Title**: Issue title (clickable link to GitHub)
+- **Repository**: Repository name with folder icon
+- **Date**: Creation date (DD/MM/YYYY format)
+- **Labels**: Color-coded label badges
+- **Count Badge**: Total number of open issues
+
+### Viewing Pull Requests
+
+Each PR card displays:
+- **Status Icon**: Pull request icon
+- **Title**: PR title (clickable link to GitHub)
+- **Repository**: Repository name
+- **Date**: Creation date
+- **Labels**: Associated labels (if any)
+- **Count Badge**: Total number of open PRs
+
+### Switching Views
+
+Use the tab interface to switch between:
+- **Issues**: Your assigned open issues
+- **Pull Requests**: Your assigned open PRs
+
+The count badge updates to reflect the current tab's item count.
+
+### Refreshing Data
+
+Click the refresh icon to fetch the latest data from GitHub. The widget shows a loading spinner during updates.
+
+## Data Fetching
+
+### Pagination
+
+The widget uses GitHub's pagination to load:
+- Up to 100 items per page
+- Automatically fetches all pages
+- Handles large numbers of repositories efficiently
+
+### Filtering Logic
+
+Only items where you are assigned (either as `assignee` or in `assignees` array) are displayed.
+
+### Performance
+
+<Info>
+  The widget fetches data from all repositories in parallel for fast loading. This may take a few seconds if you have access to many repositories.
+</Info>
+
+## Label Display
+
+Labels are shown with:
+- Label name
+- GitHub's label color
+- Compact badge format
+- Clickable in filter dropdown
+
+## Integration Details
+
+**Provider**: GitHub REST API & Octokit
+
+**API Version**: 2022-11-28
+
+**Endpoints Used**:
+- `/user/repos` - List user repositories
+- `/orgs/{org}/repos` - List organization repositories  
+- `/repos/{owner}/{repo}/issues` - List issues (includes PRs)
+
+**Required Scopes**:
+- `repo` - Full repository access
+- `read:org` - Read organization membership
+
+**Rate Limiting**: Respects GitHub's rate limits with automatic retry logic.
+
+## Troubleshooting
+
+<Warning>
+  If issues aren't loading:
+  1. Verify GitHub connection is active
+  2. Check that you have assigned issues/PRs
+  3. Try refreshing the widget
+  4. Reconnect GitHub if permissions were revoked
+  5. Clear label filters to see all items
+</Warning>
+
+### Common Issues
+
+**No results found**: Make sure you're assigned to issues or PRs in your repositories.
+
+**Missing repositories**: Verify you have the correct permissions and that repos aren't private.
+
+**Slow loading**: Normal for accounts with many repositories or organizations.
+
+## Widget Sizes
+
+- **Desktop**: 1 column × 2 rows
+- **Tablet**: 1 column × 2 rows
+- **Mobile**: 1 column × 2 rows

@@ -1,0 +1,347 @@
+---
+title: 'Environment Variables'
+description: 'Complete reference for all Forge environment variables'
+---
+
+Forge uses environment variables to configure various features and integrations. This page provides a comprehensive reference for all available environment variables.
+
+## Configuration File
+
+Create a `.env` file in the root of your Forge installation with the following variables:
+
+## Required Variables
+
+These environment variables are essential for Forge to function properly.
+
+### Application URLs
+
+<ParamField path="NEXT_PUBLIC_APP_URL" type="string" required>
+  The public URL of your Forge application.
+
+  **Examples:**
+  - Development: `http://localhost:3000`
+  - Production: `https://forge.yourdomain.com`
+
+  <Warning>
+  This variable is prefixed with `NEXT_PUBLIC_` which means it's exposed to the browser. Make sure to set this to your actual public URL, not an internal URL.
+  </Warning>
+</ParamField>
+
+### Authentication
+
+<ParamField path="BETTER_AUTH_SECRET" type="string" required>
+  A secret key used for session encryption and signing in BetterAuth.
+
+  **Requirements:**
+  - Must be a strong, random string
+  - Minimum 32 characters recommended
+  - Keep this secret and never commit it to version control
+
+  **Generate a secure secret:**
+  ```bash
+  openssl rand -base64 32
+  ```
+
+  <Warning>
+  Changing this value will invalidate all existing user sessions. Users will need to log in again.
+  </Warning>
+</ParamField>
+
+<ParamField path="BETTER_AUTH_URL" type="string" required>
+  The full URL of your BetterAuth instance, which is the same as your application's URL.
+
+  **Examples:**
+  - Development: `http://localhost:3000`
+  - Production: `https://forge.yourdomain.com`
+
+  **Note:** This is used for OAuth callback URLs and should match your `NEXT_PUBLIC_APP_URL`.
+</ParamField>
+
+### Database
+
+<ParamField path="DATABASE_URI" type="string" required>
+  PostgreSQL database connection string.
+
+  **Format:**
+  ```
+  postgresql://username:password@host:port/database
+  ```
+
+  **Examples:**
+  ```bash
+  # Local development
+  DATABASE_URI=postgresql://postgres:password@localhost:5432/forge
+
+  # Supabase
+  DATABASE_URI=postgresql://postgres:password@db.xxx.supabase.co:5432/postgres
+
+  # Neon
+  DATABASE_URI=postgresql://user:password@ep-xxx.us-east-2.aws.neon.tech/neondb
+
+  # Railway
+  DATABASE_URI=postgresql://postgres:password@containers-us-west-xxx.railway.app:5432/railway
+  ```
+
+  <Note>
+  Forge uses Drizzle ORM with the `node-postgres` driver. Make sure your PostgreSQL version is 12 or higher.
+  </Note>
+</ParamField>
+
+### Redis
+
+<ParamField path="UPSTASH_REDIS_REST_URL" type="string" required>
+  The REST URL for your Upstash Redis instance.
+
+  **Format:**
+  ```
+  https://xxx-xxx-xxx.upstash.io
+  ```
+
+  **Where to find it:**
+  - Log in to [Upstash Console](https://console.upstash.com/)
+  - Select your Redis database
+  - Copy the "REST URL" from the dashboard
+</ParamField>
+
+<ParamField path="UPSTASH_REDIS_REST_TOKEN" type="string" required>
+  The REST token for authenticating with your Upstash Redis instance.
+
+  **Where to find it:**
+  - Log in to [Upstash Console](https://console.upstash.com/)
+  - Select your Redis database
+  - Copy the "REST TOKEN" from the dashboard
+
+  <Warning>
+  Keep this token secret. It provides full access to your Redis instance.
+  </Warning>
+
+  **Use case:** Forge uses Redis for real-time notifications and caching.
+</ParamField>
+
+### Blob Storage
+
+<ParamField path="BLOB_READ_WRITE_TOKEN" type="string" required>
+  Access token for blob storage (Vercel Blob or compatible service).
+
+  **Used for:**
+  - User profile picture uploads
+  - Widget file attachments
+  - Any user-uploaded content
+
+  **Vercel Blob setup:**
+  1. Go to your [Vercel Dashboard](https://vercel.com/dashboard)
+  2. Navigate to Storage > Blob
+  3. Create a new Blob store or use an existing one
+  4. Copy the `BLOB_READ_WRITE_TOKEN`
+
+  <Note>
+  The blob storage implementation uses `@vercel/blob` package. If you're not using Vercel, you may need to modify the upload implementation in `src/app/api/upload/route.ts`.
+  </Note>
+</ParamField>
+
+## Optional Variables
+
+These environment variables enable additional features and widget integrations. Forge will work without them, but certain widgets will not be functional.
+
+### GitHub Integration
+
+Required for GitHub widget, GitHub Heatmap widget, and GitHub OAuth login.
+
+<ParamField path="GITHUB_CLIENT_ID" type="string">
+  OAuth Client ID from your GitHub OAuth App.
+
+  **Required scopes:**
+  - `repo` - Access to repositories
+  - `user:email` - Access to user email addresses
+
+  **Setup instructions:**
+  1. Go to [GitHub Developer Settings](https://github.com/settings/developers)
+  2. Click "New OAuth App"
+  3. Set Authorization callback URL to: `{BETTER_AUTH_URL}/api/auth/callback/github`
+  4. Copy the Client ID
+</ParamField>
+
+<ParamField path="GITHUB_CLIENT_SECRET" type="string">
+  OAuth Client Secret from your GitHub OAuth App.
+
+  **Where to find it:**
+  - In your GitHub OAuth App settings, generate a new client secret
+  - Copy it immediately (it won't be shown again)
+
+  <Warning>
+  Keep this secret secure. Never commit it to version control or expose it in client-side code.
+  </Warning>
+</ParamField>
+
+### Google Integration
+
+Required for Meetings widget (Google Calendar) and Inbox widget (Gmail).
+
+<ParamField path="GOOGLE_CLIENT_ID" type="string">
+  OAuth 2.0 Client ID from Google Cloud Console.
+
+  **Required scopes:**
+  - `https://www.googleapis.com/auth/calendar` - Google Calendar access
+  - `https://www.googleapis.com/auth/gmail.readonly` - Gmail read access
+
+  **Setup instructions:**
+  1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+  2. Create a new project or select an existing one
+  3. Enable Google Calendar API and Gmail API
+  4. Go to "Credentials" > "Create Credentials" > "OAuth 2.0 Client ID"
+  5. Add authorized redirect URI: `{BETTER_AUTH_URL}/api/auth/callback/google`
+  6. Copy the Client ID
+</ParamField>
+
+<ParamField path="GOOGLE_CLIENT_SECRET" type="string">
+  OAuth 2.0 Client Secret from Google Cloud Console.
+
+  **Where to find it:**
+  - In your Google Cloud Console OAuth 2.0 Client credentials
+  - Download the JSON file or copy the client secret directly
+
+  **Note:** Forge requests offline access with the `select_account consent` prompt to ensure refresh tokens are provided.
+</ParamField>
+
+### Notion Integration
+
+Required for Notion widget integration.
+
+<ParamField path="NOTION_CLIENT_ID" type="string">
+  OAuth Client ID from your Notion integration.
+
+  **Setup instructions:**
+  1. Go to [Notion Integrations](https://www.notion.so/my-integrations)
+  2. Create a new integration
+  3. Set the Redirect URI to: `{BETTER_AUTH_URL}/api/auth/callback/notion`
+  4. Copy the OAuth client ID
+</ParamField>
+
+<ParamField path="NOTION_CLIENT_SECRET" type="string">
+  OAuth Client Secret from your Notion integration.
+
+  **Where to find it:**
+  - In your Notion integration settings under "Secrets"
+  - Copy the client secret
+</ParamField>
+
+### Coinbase Integration
+
+Required for Crypto widget (cryptocurrency price tracking).
+
+<ParamField path="COINBASE_CLIENT_ID" type="string">
+  API Key from Coinbase Exchange (also used as CB-ACCESS-KEY).
+
+  **Setup instructions:**
+  1. Go to [Coinbase Exchange](https://exchange.coinbase.com/)
+  2. Navigate to Settings > API
+  3. Create a new API key
+  4. Copy the API Key (this is your Client ID)
+
+  <Note>
+  Forge uses the Coinbase Exchange API, not the standard Coinbase API. Make sure you're creating keys on the Exchange platform.
+  </Note>
+</ParamField>
+
+<ParamField path="COINBASE_CLIENT_SECRET" type="string">
+  API Secret/Passphrase from Coinbase Exchange (also used as CB-ACCESS-PASSPHRASE).
+
+  **Where to find it:**
+  - When creating your Coinbase Exchange API key, you'll receive a passphrase
+  - Save this securely - it cannot be retrieved later
+
+  **Permissions required:**
+  - View permissions for product information and price data
+
+  <Warning>
+  The Coinbase API implementation uses both `COINBASE_CLIENT_ID` and `COINBASE_CLIENT_SECRET` for authentication headers. Store these values securely.
+  </Warning>
+</ParamField>
+
+## Environment-Specific Configuration
+
+### Development
+
+```bash .env.development
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_SECRET=dev-secret-key-change-in-production
+
+DATABASE_URI=postgresql://postgres:password@localhost:5432/forge
+
+UPSTASH_REDIS_REST_URL=https://your-dev-redis.upstash.io
+UPSTASH_REDIS_REST_TOKEN=your-dev-token
+
+BLOB_READ_WRITE_TOKEN=your-dev-blob-token
+
+# Optional integrations
+GITHUB_CLIENT_ID=your-github-dev-client-id
+GITHUB_CLIENT_SECRET=your-github-dev-secret
+```
+
+### Production
+
+```bash .env.production
+NEXT_PUBLIC_APP_URL=https://forge.yourdomain.com
+BETTER_AUTH_URL=https://forge.yourdomain.com
+BETTER_AUTH_SECRET=super-secret-production-key-min-32-chars
+
+DATABASE_URI=postgresql://user:password@prod-host:5432/forge
+
+UPSTASH_REDIS_REST_URL=https://your-prod-redis.upstash.io
+UPSTASH_REDIS_REST_TOKEN=your-prod-token
+
+BLOB_READ_WRITE_TOKEN=your-prod-blob-token
+
+GITHUB_CLIENT_ID=your-github-prod-client-id
+GITHUB_CLIENT_SECRET=your-github-prod-secret
+GOOGLE_CLIENT_ID=your-google-prod-client-id
+GOOGLE_CLIENT_SECRET=your-google-prod-secret
+NOTION_CLIENT_ID=your-notion-prod-client-id
+NOTION_CLIENT_SECRET=your-notion-prod-secret
+COINBASE_CLIENT_ID=your-coinbase-prod-api-key
+COINBASE_CLIENT_SECRET=your-coinbase-prod-passphrase
+```
+
+## Security Best Practices
+
+<Warning>
+**Never commit `.env` files to version control!**
+
+Add `.env` to your `.gitignore` file:
+```gitignore
+.env
+.env.local
+.env.production
+```
+</Warning>
+
+### Recommendations
+
+1. **Use different secrets for each environment** - Don't reuse production secrets in development
+2. **Rotate secrets regularly** - Especially for production environments
+3. **Use strong random strings** - For `BETTER_AUTH_SECRET`, use at least 32 characters
+4. **Limit OAuth scopes** - Only request the minimum scopes needed for functionality
+5. **Use environment-specific OAuth apps** - Create separate OAuth applications for development and production
+6. **Store secrets securely** - Use secret management tools like Vault, AWS Secrets Manager, or your platform's secret storage
+
+## Validation
+
+Forge validates environment variables at runtime. If required variables are missing, you'll see errors in the console:
+
+```bash
+Error: DATABASE_URI is required
+```
+
+Make sure all required variables are set before starting the application.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Setup Guide" icon="wrench" href="/self-hosting/setup">
+    Complete installation and setup instructions
+  </Card>
+  <Card title="Deployment" icon="rocket" href="/self-hosting/deployment">
+    Deploy Forge to production platforms
+  </Card>
+</CardGroup>

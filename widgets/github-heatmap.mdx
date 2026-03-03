@@ -1,0 +1,236 @@
+---
+title: GitHub Heatmap Widget
+description: Visualize your GitHub contribution activity over time
+---
+
+The GitHub Heatmap widget displays your GitHub contribution graph as an interactive heatmap, showing commit activity over the past year.
+
+## Features
+
+- **Contribution Visualization**: GitHub-style contribution graph
+- **Full Year View**: Shows last 365 days of activity
+- **Activity Heatmap**: Color intensity indicates contribution levels
+- **Responsive Design**: Adapts to different screen sizes
+- **Auto-Refresh**: Syncs with GitHub automatically
+- **Detailed Data**: Hover to see exact contribution counts
+
+## Setup
+
+<Steps>
+  <Step title="Connect GitHub">
+    Authenticate with your GitHub account
+  </Step>
+  
+  <Step title="Grant Permissions">
+    Approve repository access for contribution data
+  </Step>
+  
+  <Step title="View Heatmap">
+    Your contribution graph loads automatically
+  </Step>
+</Steps>
+
+## Heatmap Display
+
+### Layout
+
+The heatmap shows:
+- **Rows**: 7 rows representing days of the week (Sun-Sat)
+- **Columns**: 53 columns representing weeks (~365 days)
+- **Cells**: Each cell represents one day
+- **Color Coding**: Darker = more contributions
+
+### Time Range
+
+Displays exactly one year of data:
+- **Start Date**: 365 days ago from today
+- **End Date**: Today
+- **Daily Granularity**: Each cell is one day
+
+### Contribution Types
+
+Counts all GitHub contributions:
+- **Commits**: To any branch on any repository
+- **Pull Requests**: Opened PRs
+- **Issues**: Created issues
+- **Code Reviews**: Reviews submitted
+
+<Info>
+  The heatmap uses GitHub's contribution calculation, which counts activity across all repositories you have access to, including private repos.
+</Info>
+
+## Color Intensity
+
+Colors indicate contribution levels:
+- **No contributions**: Lightest/gray
+- **Low activity**: Light green
+- **Moderate activity**: Medium green
+- **High activity**: Dark green
+- **Very high activity**: Darkest green
+
+The exact thresholds are determined by GitHub's algorithm.
+
+## Responsive Sizing
+
+### Cell Sizes by Breakpoint
+
+- **2xl screens**: 10px cells
+- **xl screens**: 8px cells
+- **lg screens**: 7px cells
+- **md screens**: 4px cells
+- **sm screens**: 6px cells
+- **xs screens**: 5px cells
+
+### Gap Spacing
+
+- **Gap**: 2px between cells
+- **Consistent**: Same gap at all breakpoints
+- **Visual Separation**: Clear cell boundaries
+
+## Loading State
+
+While loading:
+- Shows skeleton grid matching final layout
+- 371 skeleton cells (53 weeks × 7 days)
+- Animated pulse effect
+- Maintains heatmap dimensions
+
+## Data Source
+
+### GitHub GraphQL API
+
+The widget uses GitHub's GraphQL API to fetch:
+- **Query**: `contributionsCollection`
+- **Fields**: `contributionCalendar.weeks.contributionDays`
+- **Data**: Date and contribution count for each day
+
+### API Query
+
+```graphql
+query($username: String!, $from: DateTime!, $to: DateTime!) {
+  user(login: $username) {
+    contributionsCollection(from: $from, to: $to) {
+      contributionCalendar {
+        weeks {
+          contributionDays {
+            date
+            contributionCount
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Data Processing
+
+The widget:
+1. Fetches contribution data for the past year
+2. Transforms weeks into a flat array of days
+3. Maps each day to `{ date, count }` format
+4. Passes to the Heatmap component for rendering
+
+## Integration Details
+
+**Provider**: GitHub GraphQL API v4
+
+**Required Scopes**:
+- `repo` - Repository access
+- `read:user` - User profile access
+
+**Username Source**: Uses your authenticated GitHub username
+
+**Refresh**: Automatic token refresh when expired
+
+## Heatmap Component
+
+The underlying Heatmap component:
+- Calculates color intensity based on contribution counts
+- Handles responsive cell sizing
+- Manages grid layout (53 columns × 7 rows)
+- Provides hover tooltips with exact counts
+
+## Tooltip Information
+
+Hover over any cell to see:
+- **Date**: Exact date for that day
+- **Contributions**: Number of contributions made
+- **Format**: "X contributions on [date]"
+
+<Note>
+  Tooltip implementation depends on the Heatmap component's tooltip configuration.
+</Note>
+
+## Use Cases
+
+**Track Activity**: Monitor your coding consistency
+
+**Motivation**: Visualize your contribution streak
+
+**Team Visibility**: Show activity to team members
+
+**Portfolio**: Demonstrate active GitHub participation
+
+**Goal Setting**: Aim for consistent contribution patterns
+
+## Troubleshooting
+
+<Warning>
+  If the heatmap isn't loading:
+  1. Verify GitHub connection is active
+  2. Check that your GitHub username is correct
+  3. Ensure you have contribution data for the past year
+  4. Reconnect GitHub if permissions were revoked
+  5. Refresh the page to retry
+</Warning>
+
+### Common Issues
+
+**Empty heatmap**: You may not have any contributions in the past year.
+
+**Missing days**: GitHub may not have recorded contributions for private repos if you didn't grant full access.
+
+**Incorrect username**: The widget uses the name from your authenticated session—verify it's correct.
+
+**Loading forever**: Check your internet connection and GitHub API status.
+
+## Performance
+
+- **Data Size**: ~365 data points (one per day)
+- **Rendering**: Fast grid layout with CSS Grid
+- **Caching**: GraphQL data cached by query key
+- **Updates**: Fetches fresh data when enabled
+
+## Comparison to GitHub
+
+The widget shows the same data as your GitHub profile contribution graph:
+- Same contribution counting logic
+- Same time range (past year)
+- Same color intensity algorithm
+- Synchronized with GitHub's database
+
+## Widget Sizes
+
+- **Desktop**: 2 columns × 1 row
+- **Tablet**: 1 column × 1 row
+- **Mobile**: 1 column × 1 row
+
+<Info>
+  The larger desktop size (2 columns) provides better visibility for the full year of data. On smaller screens, cells shrink to fit.
+</Info>
+
+## Visual Customization
+
+The heatmap respects:
+- **Theme Colors**: Adjusts to light/dark mode
+- **Brand Colors**: Uses GitHub-style green shades
+- **Contrast**: High contrast for accessibility
+
+## Future Enhancements
+
+Potential future features:
+- Contribution type filtering (commits only, PRs only, etc.)
+- Custom date ranges
+- Multiple user comparison
+- Export heatmap as image

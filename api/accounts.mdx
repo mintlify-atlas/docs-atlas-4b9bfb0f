@@ -1,0 +1,303 @@
+---
+title: Accounts API
+description: Manage connected OAuth accounts
+---
+
+The Accounts API manages OAuth connections to external services like Google, GitHub, and Notion. These accounts enable widgets to access user data from integrated services.
+
+## Supported Providers
+
+- `google` - Google OAuth integration
+- `github` - GitHub OAuth integration
+- `notion` - Notion OAuth integration
+
+## Get Connected Accounts
+
+Retrieve all connected OAuth accounts for the authenticated user.
+
+<CodeGroup>
+```bash cURL
+curl -X GET http://localhost:3000/api/accounts \
+  -H "Cookie: session=your-session-token"
+```
+
+```javascript JavaScript
+const response = await fetch('/api/accounts', {
+  credentials: 'include'
+});
+
+const accounts = await response.json();
+```
+</CodeGroup>
+
+### Response
+
+Returns an array of connected account objects.
+
+<ResponseField name="id" type="string">
+  Unique account identifier
+</ResponseField>
+
+<ResponseField name="accountId" type="string">
+  Provider-specific account ID
+</ResponseField>
+
+<ResponseField name="providerId" type="string">
+  OAuth provider: `google`, `github`, or `notion`
+</ResponseField>
+
+<ResponseField name="userId" type="string">
+  ID of the user who connected this account
+</ResponseField>
+
+<ResponseField name="accessToken" type="string | null">
+  OAuth access token (sensitive - handle with care)
+</ResponseField>
+
+<ResponseField name="refreshToken" type="string | null">
+  OAuth refresh token (sensitive - handle with care)
+</ResponseField>
+
+<ResponseField name="idToken" type="string | null">
+  OpenID Connect ID token
+</ResponseField>
+
+<ResponseField name="accessTokenExpiresAt" type="string (ISO 8601) | null">
+  Access token expiration timestamp
+</ResponseField>
+
+<ResponseField name="refreshTokenExpiresAt" type="string (ISO 8601) | null">
+  Refresh token expiration timestamp
+</ResponseField>
+
+<ResponseField name="scope" type="string | null">
+  OAuth scopes granted
+</ResponseField>
+
+<ResponseField name="createdAt" type="string (ISO 8601)">
+  Account connection timestamp
+</ResponseField>
+
+<ResponseField name="updatedAt" type="string (ISO 8601)">
+  Last update timestamp
+</ResponseField>
+
+<Tabs>
+  <Tab title="Success (200)">
+    ```json
+    [
+      {
+        "id": "acc_1234567890",
+        "accountId": "google_user_id_xyz",
+        "providerId": "google",
+        "userId": "user123",
+        "accessToken": "ya29.a0AfH6SMB...",
+        "refreshToken": "1//0gLn8...",
+        "idToken": null,
+        "accessTokenExpiresAt": "2024-01-20T16:30:00.000Z",
+        "refreshTokenExpiresAt": null,
+        "scope": "https://www.googleapis.com/auth/userinfo.email",
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2024-01-20T15:30:00.000Z"
+      },
+      {
+        "id": "acc_0987654321",
+        "accountId": "github_user_id_abc",
+        "providerId": "github",
+        "userId": "user123",
+        "accessToken": "gho_16C7e42F292...",
+        "refreshToken": "ghr_1B4a2e77...",
+        "idToken": null,
+        "accessTokenExpiresAt": "2024-01-21T10:30:00.000Z",
+        "refreshTokenExpiresAt": "2024-07-15T10:30:00.000Z",
+        "scope": "repo,user",
+        "createdAt": "2024-01-16T12:00:00.000Z",
+        "updatedAt": "2024-01-20T15:30:00.000Z"
+      }
+    ]
+    ```
+  </Tab>
+  <Tab title="Error (401)">
+    ```text
+    Unauthorized
+    ```
+  </Tab>
+</Tabs>
+
+<Warning>
+  The response includes sensitive tokens. Never expose these in client-side code or logs.
+</Warning>
+
+---
+
+## Update Account
+
+Update a connected account's refresh token.
+
+<CodeGroup>
+```bash cURL
+curl -X PUT http://localhost:3000/api/accounts \
+  -H "Content-Type: application/json" \
+  -H "Cookie: session=your-session-token" \
+  -d '{
+    "provider": "google",
+    "refreshToken": "1//0gLn8..."
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('/api/accounts', {
+  method: 'PUT',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    provider: 'google',
+    refreshToken: '1//0gLn8...'
+  })
+});
+
+const updatedAccount = await response.json();
+```
+</CodeGroup>
+
+### Request Body
+
+<ParamField path="provider" type="string" required>
+  OAuth provider: `google`, `github`, or `notion`
+</ParamField>
+
+<ParamField path="refreshToken" type="string" required>
+  New refresh token for the account
+</ParamField>
+
+### Response
+
+Returns the updated account object.
+
+<Tabs>
+  <Tab title="Success (200)">
+    ```json
+    {
+      "id": "acc_1234567890",
+      "accountId": "google_user_id_xyz",
+      "providerId": "google",
+      "userId": "user123",
+      "accessToken": "ya29.a0AfH6SMB...",
+      "refreshToken": "1//0gLn8...",
+      "idToken": null,
+      "accessTokenExpiresAt": "2024-01-20T16:30:00.000Z",
+      "refreshTokenExpiresAt": null,
+      "scope": "https://www.googleapis.com/auth/userinfo.email",
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-20T16:00:00.000Z"
+    }
+    ```
+  </Tab>
+  <Tab title="Error (400)">
+    ```json
+    "Invalid request body"
+    ```
+  </Tab>
+  <Tab title="Error (404)">
+    ```json
+    { "error": "Account not found or could not be updated" }
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## Delete Account
+
+Disconnect an OAuth account.
+
+<CodeGroup>
+```bash cURL
+curl -X DELETE "http://localhost:3000/api/accounts?provider=google" \
+  -H "Cookie: session=your-session-token"
+```
+
+```javascript JavaScript
+const response = await fetch('/api/accounts?provider=google', {
+  method: 'DELETE',
+  credentials: 'include'
+});
+
+const deletedAccount = await response.json();
+```
+</CodeGroup>
+
+### Query Parameters
+
+<ParamField query="provider" type="string" required>
+  OAuth provider to disconnect: `google`, `github`, or `notion`
+</ParamField>
+
+### Response
+
+Returns the deleted account object.
+
+<Tabs>
+  <Tab title="Success (200)">
+    ```json
+    {
+      "id": "acc_1234567890",
+      "accountId": "google_user_id_xyz",
+      "providerId": "google",
+      "userId": "user123",
+      "accessToken": "ya29.a0AfH6SMB...",
+      "refreshToken": "1//0gLn8...",
+      "idToken": null,
+      "accessTokenExpiresAt": "2024-01-20T16:30:00.000Z",
+      "refreshTokenExpiresAt": null,
+      "scope": "https://www.googleapis.com/auth/userinfo.email",
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-20T15:30:00.000Z"
+    }
+    ```
+  </Tab>
+  <Tab title="Error (400)">
+    ```json
+    "Invalid request body"
+    ```
+  </Tab>
+  <Tab title="Error (404)">
+    ```json
+    { "error": "Account not found" }
+    ```
+  </Tab>
+</Tabs>
+
+<Warning>
+  Deleting an account will disconnect the OAuth integration and may break widgets that depend on it.
+</Warning>
+
+---
+
+## OAuth Flow
+
+Connecting a new account typically follows this flow:
+
+1. **Initiate OAuth** - User clicks "Connect [Provider]" in the UI
+2. **Redirect to Provider** - User is redirected to the OAuth provider's authorization page
+3. **Authorization** - User grants permissions
+4. **Callback** - Provider redirects back to Forge with authorization code
+5. **Token Exchange** - BetterAuth exchanges the code for access/refresh tokens
+6. **Account Created** - Account record is created in the database
+7. **Widget Access** - Widgets can now use the account to access provider APIs
+
+This flow is handled automatically by BetterAuth. The Accounts API is primarily used to:
+
+- View connected accounts
+- Update refresh tokens when needed
+- Disconnect accounts
+
+## Token Refresh
+
+Access tokens expire periodically. When a widget needs to use an expired token:
+
+1. Detect token expiration (check `accessTokenExpiresAt`)
+2. Use the refresh token to obtain a new access token
+3. Update the account using `PUT /api/accounts`
+
+Most OAuth libraries handle this automatically.

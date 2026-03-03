@@ -1,0 +1,135 @@
+---
+title: Meetings Widget
+description: View and manage your Google Calendar meetings
+---
+
+The Meetings widget displays your upcoming Google Calendar events with quick access to join meetings and filter by calendar.
+
+## Features
+
+- **Upcoming Events**: Shows all future calendar events sorted by date and time
+- **Multiple Calendars**: Support for viewing events across all your Google Calendars
+- **Quick Join**: One-click access to Google Meet/Hangout links
+- **Calendar Filtering**: Filter events by specific calendars
+- **Meeting Reminders**: Optional notifications before meetings start
+- **Automatic Refresh**: Syncs with Google Calendar automatically
+
+## Setup
+
+<Steps>
+  <Step title="Connect Google Account">
+    Click the widget and authenticate with your Google account to grant calendar access
+  </Step>
+  
+  <Step title="Grant Permissions">
+    Approve calendar read permissions when prompted
+  </Step>
+  
+  <Step title="Select Calendars">
+    Use the filter button to choose which calendars to display
+  </Step>
+</Steps>
+
+## Configuration
+
+### Calendar Selection
+
+The widget displays events from all your Google Calendars by default. Use the filter dropdown to:
+- Select/deselect individual calendars
+- Toggle visibility for personal, work, or shared calendars
+- View color-coded events based on calendar colors
+
+### Meeting Reminders
+
+Configure reminder notifications in your user settings:
+- Set reminder times (e.g., 5, 10, 15 minutes before)
+- Receive desktop notifications
+- Get quick links to join virtual meetings
+
+### Time Format
+
+The widget respects your global time format setting (12-hour or 24-hour).
+
+## Usage
+
+### Viewing Events
+
+Events are organized by date with headers showing:
+- Day of the week
+- Date (formatted as "Today", "Tomorrow", or full date)
+
+Each event card displays:
+- **Event title**: The meeting name
+- **Time**: Start and end times in your preferred format
+- **Location**: Physical or virtual location (if specified)
+- **Join button**: For Google Meet/Hangout meetings
+
+### Creating Events
+
+<Steps>
+  <Step title="Click the Plus Icon">
+    Click the calendar plus icon in the widget header
+  </Step>
+  
+  <Step title="Fill Event Details">
+    Enter meeting title, date, time, and optional details
+  </Step>
+  
+  <Step title="Select Calendar">
+    Choose which calendar to add the event to
+  </Step>
+  
+  <Step title="Add Conference Link (Optional)">
+    Enable Google Meet integration for virtual meetings
+  </Step>
+</Steps>
+
+### Refreshing Events
+
+Click the refresh icon to manually sync with Google Calendar and fetch the latest updates.
+
+## Event Display
+
+### Color Coding
+
+Events are color-coded based on their source calendar:
+- Border color matches the calendar color
+- Background uses a translucent version of the calendar color
+- Easy visual distinction between work, personal, and shared calendars
+
+### Recurring Events
+
+The widget automatically expands recurring events to show individual instances within the visible timeframe (up to 1000 future occurrences).
+
+## Integration Details
+
+**Provider**: Google Calendar API v3
+
+**Required Scopes**:
+- `https://www.googleapis.com/auth/calendar.readonly` (for viewing events)
+- `https://www.googleapis.com/auth/calendar.events` (for creating events)
+
+**Data Refresh**:
+- Automatic token refresh when expired
+- Manual refresh available via refresh button
+- Events cached for performance
+
+## Troubleshooting
+
+<Warning>
+  If events aren't loading, try these steps:
+  1. Click the refresh button to manually sync
+  2. Check that calendar permissions are granted
+  3. Verify your Google account is still connected
+  4. Reconnect your Google account if needed
+</Warning>
+
+<Info>
+  The widget only shows events starting from the current time forward. Past events are automatically filtered out.
+</Info>
+
+## Widget Sizes
+
+- **Desktop**: 1 column × 2 rows
+- **Tablet**: 1 column × 2 rows
+- **Mobile**: 1 column × 2 rows

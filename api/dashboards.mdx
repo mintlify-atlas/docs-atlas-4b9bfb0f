@@ -1,0 +1,299 @@
+---
+title: Dashboards API
+description: Manage user dashboards
+---
+
+Dashboards are the primary organizational unit in Forge. Each dashboard can contain multiple widgets and belongs to a single user.
+
+## Create Dashboard
+
+<CodeGroup>
+```bash cURL
+curl -X POST http://localhost:3000/api/dashboards \
+  -H "Content-Type: application/json" \
+  -H "Cookie: session=your-session-token" \
+  -d '{
+    "name": "My Dashboard"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('/api/dashboards', {
+  method: 'POST',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    name: 'My Dashboard'
+  })
+});
+
+const dashboard = await response.json();
+```
+</CodeGroup>
+
+### Request Body
+
+<ParamField path="name" type="string" required>
+  Dashboard name (minimum 1 character)
+</ParamField>
+
+### Response
+
+<ResponseField name="id" type="string (uuid)">
+  Unique dashboard identifier
+</ResponseField>
+
+<ResponseField name="userId" type="string">
+  ID of the user who owns this dashboard
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Dashboard name
+</ResponseField>
+
+<ResponseField name="isPublic" type="boolean">
+  Whether the dashboard is publicly accessible (default: false)
+</ResponseField>
+
+<ResponseField name="createdAt" type="string (ISO 8601)">
+  Creation timestamp
+</ResponseField>
+
+<ResponseField name="updatedAt" type="string (ISO 8601)">
+  Last update timestamp
+</ResponseField>
+
+<Tabs>
+  <Tab title="Success (200)">
+    ```json
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "userId": "user123",
+      "name": "My Dashboard",
+      "isPublic": false,
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-15T10:30:00.000Z"
+    }
+    ```
+  </Tab>
+  <Tab title="Error (400)">
+    ```json
+    "Invalid request body"
+    ```
+  </Tab>
+  <Tab title="Error (401)">
+    ```text
+    Unauthorized
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## Get Dashboards
+
+Retrieve all dashboards for the authenticated user, or a specific dashboard by ID.
+
+<CodeGroup>
+```bash Get All
+curl -X GET http://localhost:3000/api/dashboards \
+  -H "Cookie: session=your-session-token"
+```
+
+```bash Get by ID
+curl -X GET "http://localhost:3000/api/dashboards?id=550e8400-e29b-41d4-a716-446655440000" \
+  -H "Cookie: session=your-session-token"
+```
+
+```javascript JavaScript
+// Get all dashboards
+const response = await fetch('/api/dashboards', {
+  credentials: 'include'
+});
+const dashboards = await response.json();
+
+// Get specific dashboard
+const response = await fetch('/api/dashboards?id=550e8400-e29b-41d4-a716-446655440000', {
+  credentials: 'include'
+});
+const [dashboard] = await response.json();
+```
+</CodeGroup>
+
+### Query Parameters
+
+<ParamField query="id" type="string (uuid)" optional>
+  Dashboard ID to retrieve. If omitted, returns all user dashboards.
+</ParamField>
+
+### Response
+
+Returns an array of dashboard objects.
+
+<Tabs>
+  <Tab title="Success (200)">
+    ```json
+    [
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440000",
+        "userId": "user123",
+        "name": "My Dashboard",
+        "isPublic": false,
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2024-01-15T10:30:00.000Z"
+      }
+    ]
+    ```
+  </Tab>
+  <Tab title="Error (403)">
+    ```json
+    { "error": "Forbidden" }
+    ```
+    User does not own the requested dashboard.
+  </Tab>
+  <Tab title="Error (404)">
+    ```json
+    { "error": "Dashboard not found" }
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## Update Dashboard
+
+<CodeGroup>
+```bash cURL
+curl -X PUT http://localhost:3000/api/dashboards \
+  -H "Content-Type: application/json" \
+  -H "Cookie: session=your-session-token" \
+  -d '{
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "name": "Updated Dashboard Name"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('/api/dashboards', {
+  method: 'PUT',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    id: '550e8400-e29b-41d4-a716-446655440000',
+    name: 'Updated Dashboard Name'
+  })
+});
+
+const updatedDashboard = await response.json();
+```
+</CodeGroup>
+
+### Request Body
+
+<ParamField path="id" type="string (uuid)" required>
+  Dashboard ID to update
+</ParamField>
+
+<ParamField path="name" type="string" required>
+  New dashboard name (minimum 1 character)
+</ParamField>
+
+### Response
+
+Returns the updated dashboard object.
+
+<Tabs>
+  <Tab title="Success (200)">
+    ```json
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "userId": "user123",
+      "name": "Updated Dashboard Name",
+      "isPublic": false,
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-15T11:45:00.000Z"
+    }
+    ```
+  </Tab>
+  <Tab title="Error (400)">
+    ```json
+    "Invalid request body"
+    ```
+  </Tab>
+  <Tab title="Error (403)">
+    ```json
+    { "error": "Forbidden" }
+    ```
+  </Tab>
+  <Tab title="Error (404)">
+    ```json
+    { "error": "Dashboard not found or could not be updated" }
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## Delete Dashboard
+
+Deletes a dashboard and all associated widgets.
+
+<CodeGroup>
+```bash cURL
+curl -X DELETE "http://localhost:3000/api/dashboards?id=550e8400-e29b-41d4-a716-446655440000" \
+  -H "Cookie: session=your-session-token"
+```
+
+```javascript JavaScript
+const response = await fetch('/api/dashboards?id=550e8400-e29b-41d4-a716-446655440000', {
+  method: 'DELETE',
+  credentials: 'include'
+});
+
+const deletedDashboard = await response.json();
+```
+</CodeGroup>
+
+### Query Parameters
+
+<ParamField query="id" type="string (uuid)" required>
+  Dashboard ID to delete
+</ParamField>
+
+### Response
+
+Returns the deleted dashboard object.
+
+<Warning>
+  This action is permanent and will also delete all widgets on the dashboard.
+</Warning>
+
+<Tabs>
+  <Tab title="Success (200)">
+    ```json
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "userId": "user123",
+      "name": "My Dashboard",
+      "isPublic": false,
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-15T10:30:00.000Z"
+    }
+    ```
+  </Tab>
+  <Tab title="Error (400)">
+    ```json
+    "Invalid request body"
+    ```
+  </Tab>
+  <Tab title="Error (403)">
+    ```json
+    { "error": "Forbidden" }
+    ```
+  </Tab>
+  <Tab title="Error (404)">
+    ```json
+    { "error": "Dashboard not found or could not be deleted" }
+    ```
+  </Tab>
+</Tabs>

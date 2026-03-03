@@ -1,0 +1,188 @@
+---
+title: Notion OAuth Integration
+description: Connect Notion to access and embed your pages in Forge
+---
+
+The Notion OAuth integration allows you to connect your Notion workspace to Forge, enabling you to access and display Notion pages directly within your dashboard.
+
+## What it enables
+
+Connecting your Notion workspace allows you to:
+
+- Access your Notion pages from within Forge widgets
+- Browse page hierarchies including parent and child pages
+- Integrate Notion content into your personalized dashboard
+
+## Setup Instructions
+
+<Steps>
+  <Step title="Create a Notion Integration">
+    1. Go to [Notion Integrations](https://www.notion.so/my-integrations)
+    2. Click **New integration**
+    3. Fill in the integration details:
+       - **Name**: `Forge` (or your preferred name)
+       - **Associated workspace**: Select your workspace
+       - **Logo**: Optional - upload a logo for your integration
+  </Step>
+
+  <Step title="Configure Integration Capabilities">
+    Set the following capabilities for your integration:
+
+    - **Content Capabilities**:
+      - Read content: ✓ (required)
+      - Update content: Optional
+      - Insert content: Optional
+    - **User Capabilities**: Leave unchecked unless needed
+    - **Comment Capabilities**: Leave unchecked unless needed
+
+    <Info>
+      Forge primarily needs read access to fetch and display your Notion pages. Additional capabilities are optional based on your needs.
+    </Info>
+  </Step>
+
+  <Step title="Get Integration Credentials">
+    After creating the integration:
+
+    1. You'll see your **Integration Token** (also called Secret)
+    2. Copy the **OAuth client ID** and **OAuth client secret** from the integration settings
+    3. Note the **Authorization URL** and **Token URL** (these are standard Notion URLs)
+
+    <Warning>
+      Store your client secret securely. It provides access to your Notion workspace.
+    </Warning>
+  </Step>
+
+  <Step title="Configure Redirect URI">
+    In your Notion integration settings:
+
+    1. Navigate to the **OAuth Domain & URIs** section
+    2. Add your redirect URI:
+       - Development: `http://localhost:3000/api/auth/callback/notion`
+       - Production: `https://yourdomain.com/api/auth/callback/notion`
+    3. Save the changes
+  </Step>
+
+  <Step title="Add Environment Variables">
+    Add the following variables to your `.env` file:
+
+    <CodeGroup>
+    ```bash .env
+    NOTION_CLIENT_ID=your_notion_client_id_here
+    NOTION_CLIENT_SECRET=your_notion_client_secret_here
+    ```
+    </CodeGroup>
+
+    <Warning>
+      Never commit credentials to version control. Ensure `.env` is in your `.gitignore` file.
+    </Warning>
+  </Step>
+
+  <Step title="Restart Your Application">
+    Restart your Forge application to apply the new configuration:
+
+    <CodeGroup>
+    ```bash npm
+    npm run dev
+    ```
+
+    ```bash yarn
+    yarn dev
+    ```
+
+    ```bash pnpm
+    pnpm dev
+    ```
+    </CodeGroup>
+  </Step>
+</Steps>
+
+## Connect Your Workspace
+
+After configuring the integration:
+
+1. Navigate to **Settings** in your Forge dashboard
+2. Click **Connect Notion Account**
+3. Select the pages you want to grant access to
+4. Click **Allow access**
+
+<Info>
+  You'll need to explicitly share pages with your Forge integration in Notion. The integration can only access pages that have been shared with it.
+</Info>
+
+## Sharing Pages with Forge
+
+To allow Forge to access specific Notion pages:
+
+1. Open the page in Notion
+2. Click **Share** in the top right
+3. Click **Invite**
+4. Search for your Forge integration by name
+5. Select the integration and choose access level (usually **Read** is sufficient)
+6. Click **Invite**
+
+Repeat this for any pages you want to access from Forge.
+
+## How Forge Accesses Your Pages
+
+Forge uses the Notion API to:
+
+- Search for pages you've granted access to
+- Fetch page properties and titles
+- Retrieve child pages and page hierarchies
+- Display page content in widgets
+
+The integration uses Notion API version `2022-06-28` and respects all Notion API rate limits and best practices.
+
+## Account Linking
+
+Notion is configured as a trusted provider for account linking in Forge:
+
+- You can link Notion to an existing Forge account
+- Multiple OAuth providers can be connected to one user
+- Notion can coexist with Google and GitHub integrations
+
+## Managing Your Connection
+
+From the Settings page:
+
+- **View status**: Check if your Notion workspace is connected
+- **Disconnect**: Revoke access and remove the integration
+- **Reconnect**: Re-authorize if your access token expires
+
+## Troubleshooting
+
+### Authorization Failed
+
+If you can't connect your Notion account:
+
+- Verify the redirect URI in your Notion integration exactly matches your application URL
+- Ensure `NOTION_CLIENT_ID` and `NOTION_CLIENT_SECRET` are correctly set
+- Check that your integration is active in Notion
+
+### No Pages Found
+
+If Forge can't find your pages:
+
+- Make sure you've shared the pages with your Forge integration in Notion
+- The integration can only see pages explicitly shared with it
+- Try disconnecting and reconnecting to refresh the connection
+
+### Access Token Expired
+
+If you see "Notion integration missing or expired" errors:
+
+- Disconnect your Notion account from Forge Settings
+- Reconnect to generate a fresh access token
+- Verify your integration is still active in Notion settings
+
+## API Reference
+
+Forge makes the following API calls to Notion:
+
+- `POST /v1/search` - Search for pages in your workspace
+- `GET /v1/blocks/{block_id}/children` - Fetch child pages
+- Uses `Notion-Version: 2022-06-28` header for API compatibility
+
+<Info>
+  All API requests include proper authentication using Bearer tokens obtained during the OAuth flow.
+</Info>

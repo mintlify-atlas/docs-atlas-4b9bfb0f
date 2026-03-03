@@ -1,0 +1,234 @@
+---
+title: Countdown Widget
+description: Count down to important events and deadlines
+---
+
+The Countdown widget displays a live countdown to a specific date and time, with emoji customization and optional reminder notifications.
+
+## Features
+
+- **Live Countdown**: Real-time countdown in days, hours, and minutes
+- **Custom Events**: Name your countdown anything you like
+- **Emoji Icons**: Personalize with custom emoji
+- **Date & Time Picker**: Precise deadline selection
+- **Reminder Notifications**: Get notified when countdown reaches zero
+- **Future Events Only**: Validates that events are in the future
+
+## Setup
+
+<Steps>
+  <Step title="Add Widget">
+    Add the Countdown widget to your dashboard
+  </Step>
+  
+  <Step title="Click Plus Icon">
+    Click the + button to create a countdown
+  </Step>
+  
+  <Step title="Configure Event">
+    Enter title, date, time, and choose an emoji
+  </Step>
+  
+  <Step title="Save">
+    Click "Add countdown" to start the timer
+  </Step>
+</Steps>
+
+## Creating a Countdown
+
+### Event Details
+
+<Steps>
+  <Step title="Choose Emoji">
+    Click the emoji button to open the picker and select an icon
+  </Step>
+  
+  <Step title="Enter Title">
+    Give your countdown a descriptive name (e.g., "Product Launch", "Birthday", "Vacation")
+  </Step>
+  
+  <Step title="Select Date">
+    Use the date picker to choose the target date
+  </Step>
+  
+  <Step title="Set Time">
+    Use the time picker to set the exact hour and minute
+  </Step>
+  
+  <Step title="Submit">
+    Click "Add countdown" to create it
+  </Step>
+</Steps>
+
+### Validation
+
+The widget ensures:
+- Date and time are in the future
+- Title is not empty
+- All required fields are filled
+
+If validation fails, you'll see an error message explaining what needs to be fixed.
+
+<Warning>
+  You cannot create a countdown for a date/time that has already passed. The form will show an error: "Date and time must be in the future".
+</Warning>
+
+## Display Format
+
+### Active Countdown
+
+When a countdown is active, you'll see:
+- **Emoji Icon**: Large emoji in a bordered box
+- **Time Remaining**: "Xd Xh Xm" format (days, hours, minutes)
+- **Custom Title**: In the widget header
+
+### Time Format
+
+- **Days**: Full days remaining
+- **Hours**: Hours beyond full days (0-23)
+- **Minutes**: Minutes beyond full hours (0-59)
+- **Example**: "15d 7h 42m"
+
+### When Countdown Ends
+
+When the countdown reaches zero:
+- Display shows "Ended"
+- Timer stops updating
+- Reminder notification triggers (if enabled)
+- You can reset or delete the countdown
+
+## Managing Countdowns
+
+### Single Countdown
+
+The widget supports one active countdown at a time. To change:
+1. Click the reset icon to delete the current countdown
+2. Create a new countdown
+
+### Resetting
+
+Click the reset icon (circular arrow) in the widget header to:
+- Delete the current countdown
+- Return to empty state
+- Allow creating a new countdown
+
+<Note>
+  Deleting a countdown is permanent and cannot be undone. The timer stops immediately.
+</Note>
+
+## Emoji Picker
+
+Features:
+- **6 emojis per row**: Compact grid layout
+- **Categories**: Grouped by type (smileys, objects, symbols, etc.)
+- **Search**: Find specific emojis quickly
+- **Recent**: Shows recently used emojis
+- **Default**: 🎉 (party popper) is the default emoji
+
+## Countdown Reminders
+
+Enable countdown reminders in your user settings to:
+- Get notified when countdown reaches zero
+- See the countdown title in the notification
+- Get reminded about important events
+
+**Notification Message**: `Your countdown "[title]" ended!`
+
+**Timing**: Notification triggers at the exact date/time you set
+
+<Info>
+  Reminders only work if:
+  1. Countdown reminders are enabled in settings
+  2. Browser notifications are allowed
+  3. The dashboard is open when countdown ends
+</Info>
+
+## Configuration Details
+
+The widget stores:
+- **Title**: Event name
+- **Emoji**: Selected emoji character
+- **Date**: Target date and time (ISO format)
+
+Only one countdown can be configured per widget instance.
+
+## Use Cases
+
+**Project Deadlines**: Track time until project milestones
+
+**Product Launches**: Count down to release dates
+
+**Events**: Track upcoming conferences, meetings, or celebrations
+
+**Personal Goals**: Monitor time until vacations, birthdays, or special dates
+
+**Sprints**: Track agile sprint end dates
+
+## Time Calculation
+
+The countdown:
+- Updates every second
+- Calculates difference between now and target time
+- Rounds down to nearest minute
+- Shows only future time (never negative)
+
+## Visual Design
+
+### Emoji Display
+
+- **Size**: 4xl-7xl depending on screen size
+- **Container**: Bordered box with subtle shadow
+- **Background**: Translucent black/white
+- **Responsive**: Adjusts for different screen sizes
+
+### Timer Display
+
+- **Font**: Large (2xl-3xl) monospaced
+- **Color**: Primary theme color
+- **Weight**: Semibold
+- **Truncation**: Prevents overflow on small screens
+
+## Responsive Behavior
+
+The widget layout adjusts:
+- **Desktop/Tablet**: Side-by-side emoji and timer
+- **Mobile**: Stacked vertically (emoji on top)
+- **Text Size**: Scales appropriately for each breakpoint
+
+## Troubleshooting
+
+<Warning>
+  Common issues and solutions:
+  
+  **Can't create countdown**: Make sure date/time is in the future
+  
+  **Timer not updating**: Refresh the page
+  
+  **No notification**: Check browser notification permissions and settings
+  
+  **Wrong time showing**: Verify your timezone setting
+</Warning>
+
+### Date Picker Issues
+
+If the date picker won't open:
+- Click directly on the date field
+- Ensure JavaScript is enabled
+- Try refreshing the page
+
+### Time Picker Issues
+
+Time picker uses 24-hour format:
+- 8:00 AM = 08:00
+- 2:30 PM = 14:30
+- Midnight = 00:00
+
+## Widget Sizes
+
+- **Desktop**: 1 column × 1 row
+- **Tablet**: 1 column × 1 row
+- **Mobile**: 1 column × 2 rows (vertical layout)
+
+<Info>
+  The Countdown widget is perfect for tracking important deadlines, creating urgency for goals, or simply counting down to exciting events!
+</Info>

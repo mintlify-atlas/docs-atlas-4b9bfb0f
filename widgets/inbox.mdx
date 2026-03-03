@@ -1,0 +1,151 @@
+---
+title: Inbox Widget
+description: View and manage your Gmail inbox from your dashboard
+---
+
+The Inbox widget provides a streamlined view of your Gmail messages with filtering, labels, and infinite scrolling.
+
+## Features
+
+- **Email List View**: Display messages from your Gmail account
+- **Label Filtering**: Filter messages by Gmail labels (Inbox, Sent, Important, etc.)
+- **Infinite Scroll**: Load more messages as you scroll
+- **Email Notifications**: Get notified when new emails arrive
+- **Quick Preview**: View email details without leaving your dashboard
+- **Label Management**: See which labels are assigned to each email
+
+## Setup
+
+<Steps>
+  <Step title="Connect Gmail Account">
+    Authenticate with your Google account to grant Gmail access
+  </Step>
+  
+  <Step title="Grant Permissions">
+    Approve Gmail read permissions when prompted
+  </Step>
+  
+  <Step title="Select Labels">
+    Choose which Gmail labels/folders to display (defaults to Inbox)
+  </Step>
+</Steps>
+
+## Configuration
+
+### Label Selection
+
+Filter emails by Gmail labels:
+- Click the filter icon to open the label selector
+- Check/uncheck labels to show/hide messages
+- Search for specific labels using the search box
+- Default labels: Inbox, Sent, Drafts, Spam, Trash
+- Custom labels: Any labels you've created in Gmail
+
+### Email Notifications
+
+Enable email reminders in your user settings to receive notifications when new messages arrive:
+- Desktop notifications for new emails
+- Shows email subject and preview snippet
+- Only triggers for genuinely new messages (not when refreshing)
+
+## Usage
+
+### Viewing Emails
+
+Each email in the list displays:
+- **Sender**: Email address or contact name
+- **Subject**: Email subject line
+- **Snippet**: Preview of email content
+- **Time**: When the email was received
+- **Labels**: Visual badges showing assigned labels
+
+### Opening Emails
+
+Click on any email to open a detailed view showing:
+- Full sender information
+- Complete email body (HTML and plain text support)
+- All assigned labels
+- Timestamp
+
+### Loading More Messages
+
+The widget uses infinite scrolling:
+- Scroll to the bottom to automatically load more messages
+- Click "Load more" button for manual loading
+- Loads up to 50 messages per page
+- Maximum of 1000 messages cached
+
+### Refreshing
+
+Click the refresh icon to sync with Gmail and fetch new messages. The widget also automatically refreshes every 5 minutes.
+
+## Label Management
+
+### System Labels
+
+Gmail system labels are automatically formatted:
+- `CATEGORY_PERSONAL` → "Personal"
+- `CATEGORY_SOCIAL` → "Social" 
+- `CATEGORY_PROMOTIONS` → "Promotions"
+- Underscores replaced with spaces
+- Capitalized for readability
+
+### Custom Labels
+
+Any labels you create in Gmail appear in the filter list and can be used to organize messages.
+
+## Search and Filtering
+
+The widget supports Gmail's label query syntax:
+- Multiple labels combined with OR logic
+- Handles labels with spaces using quoted syntax
+- Filters applied to all message operations
+
+## Integration Details
+
+**Provider**: Gmail API v1
+
+**Required Scopes**:
+- `https://www.googleapis.com/auth/gmail.readonly` (for viewing emails)
+- `https://www.googleapis.com/auth/gmail.labels` (for managing labels)
+
+**Data Refresh**:
+- Auto-refresh every 5 minutes
+- Manual refresh available
+- Automatic token refresh
+- Messages cached for performance
+
+**Concurrency**:
+- Fetches message details with 8 concurrent requests
+- Optimized for fast loading
+
+## Performance
+
+<Info>
+  The widget fetches message metadata and body content in batches for optimal performance. Full message bodies are loaded only when you open an email.
+</Info>
+
+## Troubleshooting
+
+<Warning>
+  If emails aren't loading:
+  1. Check your internet connection
+  2. Verify Gmail permissions are granted
+  3. Try clicking the refresh button
+  4. Reconnect your Google account if needed
+  5. Clear the label filter to see all messages
+</Warning>
+
+### Common Issues
+
+**No messages showing**: Make sure at least one label is selected in the filter.
+
+**Messages not updating**: Click the refresh button or wait for the automatic 5-minute refresh.
+
+**Slow loading**: This is normal for accounts with many messages. The widget loads in batches.
+
+## Widget Sizes
+
+- **Desktop**: 1 column × 2 rows
+- **Tablet**: 1 column × 2 rows
+- **Mobile**: 1 column × 2 rows

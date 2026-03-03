@@ -1,0 +1,222 @@
+---
+title: Settings API
+description: Manage user settings and preferences
+---
+
+Settings store user preferences, onboarding status, and custom configuration. Each user typically has one settings object.
+
+## Get Settings
+
+Retrieve settings for the authenticated user.
+
+<CodeGroup>
+```bash cURL
+curl -X GET http://localhost:3000/api/settings \
+  -H "Cookie: session=your-session-token"
+```
+
+```javascript JavaScript
+const response = await fetch('/api/settings', {
+  credentials: 'include'
+});
+
+const settings = await response.json();
+```
+</CodeGroup>
+
+### Response
+
+Returns an array of settings objects (typically one per user).
+
+<ResponseField name="id" type="string (uuid)">
+  Unique settings identifier
+</ResponseField>
+
+<ResponseField name="userId" type="string">
+  ID of the user these settings belong to
+</ResponseField>
+
+<ResponseField name="lastDashboardId" type="string (uuid) | null">
+  ID of the last viewed dashboard
+</ResponseField>
+
+<ResponseField name="config" type="object">
+  Custom user configuration (key-value pairs)
+</ResponseField>
+
+<ResponseField name="onboardingCompleted" type="boolean">
+  Whether the user has completed onboarding (default: false)
+</ResponseField>
+
+<ResponseField name="createdAt" type="string (ISO 8601)">
+  Creation timestamp
+</ResponseField>
+
+<ResponseField name="updatedAt" type="string (ISO 8601)">
+  Last update timestamp
+</ResponseField>
+
+<Tabs>
+  <Tab title="Success (200)">
+    ```json
+    [
+      {
+        "id": "a3bb189e-8bf9-3888-9912-ace4e6543002",
+        "userId": "user123",
+        "lastDashboardId": "550e8400-e29b-41d4-a716-446655440000",
+        "config": {
+          "theme": "dark",
+          "language": "en"
+        },
+        "onboardingCompleted": true,
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2024-01-20T14:22:00.000Z"
+      }
+    ]
+    ```
+  </Tab>
+  <Tab title="Error (401)">
+    ```text
+    Unauthorized
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## Update Settings
+
+<CodeGroup>
+```bash cURL
+curl -X PUT http://localhost:3000/api/settings \
+  -H "Content-Type: application/json" \
+  -H "Cookie: session=your-session-token" \
+  -d '{
+    "id": "a3bb189e-8bf9-3888-9912-ace4e6543002",
+    "lastDashboardId": "550e8400-e29b-41d4-a716-446655440000",
+    "config": {
+      "theme": "light",
+      "notifications": true
+    },
+    "onboardingCompleted": true
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('/api/settings', {
+  method: 'PUT',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    id: 'a3bb189e-8bf9-3888-9912-ace4e6543002',
+    lastDashboardId: '550e8400-e29b-41d4-a716-446655440000',
+    config: {
+      theme: 'light',
+      notifications: true
+    },
+    onboardingCompleted: true
+  })
+});
+
+const updatedSettings = await response.json();
+```
+</CodeGroup>
+
+### Request Body
+
+<ParamField path="id" type="string (uuid)" required>
+  Settings ID to update
+</ParamField>
+
+<ParamField path="lastDashboardId" type="string (uuid)" optional>
+  ID of the last viewed dashboard
+</ParamField>
+
+<ParamField path="config" type="object" optional>
+  Custom configuration object (key-value pairs)
+</ParamField>
+
+<ParamField path="onboardingCompleted" type="boolean" optional>
+  Mark onboarding as completed
+</ParamField>
+
+### Response
+
+Returns the updated settings object.
+
+<Tabs>
+  <Tab title="Success (200)">
+    ```json
+    {
+      "id": "a3bb189e-8bf9-3888-9912-ace4e6543002",
+      "userId": "user123",
+      "lastDashboardId": "550e8400-e29b-41d4-a716-446655440000",
+      "config": {
+        "theme": "light",
+        "notifications": true
+      },
+      "onboardingCompleted": true,
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-20T15:10:00.000Z"
+    }
+    ```
+  </Tab>
+  <Tab title="Error (400)">
+    ```json
+    "Invalid request body"
+    ```
+  </Tab>
+  <Tab title="Error (403)">
+    ```json
+    { "error": "Forbidden" }
+    ```
+    User does not own these settings.
+  </Tab>
+  <Tab title="Error (404)">
+    ```json
+    { "error": "Settings not found or could not be updated" }
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## Config Field
+
+The `config` field is a flexible JSONB object that can store any custom user preferences:
+
+```json
+{
+  "config": {
+    "theme": "dark",
+    "language": "en",
+    "notifications": true,
+    "displayMode": "compact",
+    "customOption": "value"
+  }
+}
+```
+
+You can store any valid JSON data structure in the config field.
+
+## Onboarding Flow
+
+The `onboardingCompleted` field tracks whether a user has finished the initial setup:
+
+1. User signs up - settings created with `onboardingCompleted: false`
+2. User completes onboarding steps in the UI
+3. Frontend calls `PUT /api/settings` with `onboardingCompleted: true`
+4. User no longer sees onboarding prompts
+
+```javascript
+// Mark onboarding as complete
+await fetch('/api/settings', {
+  method: 'PUT',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    id: settingsId,
+    onboardingCompleted: true
+  })
+});
+```

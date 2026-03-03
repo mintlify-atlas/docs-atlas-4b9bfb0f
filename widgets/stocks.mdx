@@ -1,0 +1,172 @@
+---
+title: Stocks Widget  
+description: Track real-time cryptocurrency prices and market trends
+---
+
+The Stocks widget displays real-time cryptocurrency prices, price changes, and historical trends using Coinbase data.
+
+## Features
+
+- **Real-Time Prices**: Live crypto spot prices from Coinbase
+- **Price Charts**: Sparkline charts showing price trends
+- **Multiple Currencies**: Track multiple crypto assets simultaneously
+- **Timeframe Selection**: View price changes over different periods
+- **Percentage Change**: See gains/losses at a glance
+- **Search & Filter**: Find and add specific cryptocurrencies
+
+## Configuration
+
+### Default Currencies
+
+The widget comes preconfigured with:
+- **BTC-USD** (Bitcoin)
+- **ETH-USD** (Ethereum)
+- **SOL-USD** (Solana)
+
+You can customize this list to track any crypto pairs available on Coinbase.
+
+### Timeframe Options
+
+Select from multiple timeframes to view price changes:
+- **1 hour**: Short-term price movements
+- **24 hours**: Daily performance (default)
+- **1 week**: Weekly trends
+- **1 month**: Monthly performance
+- **3 months**: Quarterly view
+- **6 months**: Half-year trends
+- **1 year**: Annual performance
+
+### Adding Currencies
+
+<Steps>
+  <Step title="Click Currency Filter">
+    Click the chart icon in the widget header
+  </Step>
+  
+  <Step title="Search for Currency">
+    Use the search box to find specific cryptocurrencies
+  </Step>
+  
+  <Step title="Select Currency">
+    Check the box next to currencies you want to track
+  </Step>
+  
+  <Step title="Save Selection">
+    Your selection is saved automatically
+  </Step>
+</Steps>
+
+## Usage
+
+### Price Display
+
+Each currency card shows:
+- **Base Currency**: Symbol (e.g., BTC, ETH)
+- **Trading Pair**: Full pair name (e.g., BTC-USD)
+- **Current Price**: Real-time price in USD
+- **Sparkline Chart**: Visual price trend for selected timeframe
+- **Price Change**: Percentage gain/loss with up/down arrow
+- **Color Coding**: Green for gains, red for losses
+
+### Interpreting Charts
+
+The sparkline charts display:
+- Historical close prices for the selected timeframe
+- Auto-scaled to show the full price range
+- Smooth polyline visualization
+- Color-coded: green for positive trends, red for negative
+
+### Changing Timeframes
+
+<Steps>
+  <Step title="Click Time Selector">
+    Click the time dropdown in the widget header
+  </Step>
+  
+  <Step title="Select Timeframe">
+    Choose from 1h, 24h, 1w, 1m, 3m, 6m, or 1y
+  </Step>
+  
+  <Step title="View Updated Data">
+    Charts and price changes update automatically
+  </Step>
+</Steps>
+
+## Data Details
+
+### Price Updates
+
+- Prices update in real-time via Coinbase API
+- Historical data shows closing prices at regular intervals
+- Percentage changes calculated from first to last data point in timeframe
+
+### Available Currencies
+
+All cryptocurrencies available on Coinbase Spot Market:
+- Major coins: BTC, ETH, SOL, ADA, DOT, etc.
+- Stablecoins: USDC, USDT, DAI, etc.
+- Altcoins: Various smaller market cap tokens
+- All priced in USD
+
+### Chart Data Points
+
+Sparklines show historical data based on timeframe:
+- More data points for longer timeframes
+- Optimized for visual clarity
+- Auto-scaled to highlight trends
+
+## API Integration
+
+**Provider**: Coinbase
+
+**Endpoints**:
+- `/api/coinbase/currencies` - List available currencies
+- `/api/coinbase/prices` - Fetch prices and historical data
+
+**Data Format**:
+- Current spot price
+- Historical candle data (OHLC)
+- Percentage change calculation
+
+**No Authentication Required**: Public Coinbase data endpoints
+
+## Error Handling
+
+<Warning>
+  If price data fails to load for a specific currency:
+  - An error message appears on that currency card
+  - Other currencies continue to display normally
+  - Try refreshing or removing/re-adding the problematic currency
+</Warning>
+
+### Common Issues
+
+**Currency not found**: The currency may not be available on Coinbase or the trading pair doesn't exist.
+
+**Loading errors**: Check your internet connection or try again later if Coinbase API is experiencing issues.
+
+**Missing chart data**: Some newly listed currencies may have limited historical data.
+
+## Price Formatting
+
+Prices are formatted as:
+- Currency symbol: USD ($)
+- Maximum 2 decimal places
+- Thousands separators for readability
+- Example: $42,123.45
+
+Percentage changes show:
+- +/- sign
+- 2 decimal precision  
+- % symbol
+- Example: +5.23% or -2.10%
+
+## Widget Sizes
+
+- **Desktop**: 1 column × 2 rows
+- **Tablet**: 1 column × 2 rows
+- **Mobile**: 1 column × 2 rows
+
+<Info>
+  The widget automatically adjusts the number of visible currencies based on available space. Use scrolling to view all tracked currencies.
+</Info>

@@ -1,0 +1,131 @@
+---
+title: Google OAuth Integration
+description: Connect Google Calendar and Gmail to your Forge dashboard
+---
+
+The Google OAuth integration enables you to connect your Google account to Forge, allowing you to access Google Calendar events and Gmail messages directly from your dashboard widgets.
+
+## What it enables
+
+Connecting your Google account unlocks two powerful widgets:
+
+- **Meetings Widget**: View your upcoming Google Calendar events and meetings
+- **Inbox Widget**: Access and read your Gmail messages in one place
+
+## Required OAuth Scopes
+
+Forge requests the following scopes from Google:
+
+- `https://www.googleapis.com/auth/calendar` - Read and manage your Google Calendar events
+- `https://www.googleapis.com/auth/gmail.readonly` - Read your Gmail messages
+
+## Setup Instructions
+
+<Steps>
+  <Step title="Create a Google Cloud Project">
+    1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
+    2. Create a new project or select an existing one
+    3. Enable the **Google Calendar API** and **Gmail API** for your project
+  </Step>
+
+  <Step title="Configure OAuth Consent Screen">
+    1. Navigate to **APIs & Services > OAuth consent screen**
+    2. Select **External** user type (or **Internal** if using Google Workspace)
+    3. Fill in the required application information:
+       - App name: `Forge`
+       - User support email: Your email address
+       - Developer contact information: Your email address
+    4. Add the required scopes:
+       - `https://www.googleapis.com/auth/calendar`
+       - `https://www.googleapis.com/auth/gmail.readonly`
+    5. Add test users if your app is in testing mode
+  </Step>
+
+  <Step title="Create OAuth 2.0 Credentials">
+    1. Go to **APIs & Services > Credentials**
+    2. Click **Create Credentials > OAuth client ID**
+    3. Select **Web application** as the application type
+    4. Configure the authorized redirect URIs:
+       - For development: `http://localhost:3000/api/auth/callback/google`
+       - For production: `https://yourdomain.com/api/auth/callback/google`
+    5. Click **Create** and save your **Client ID** and **Client Secret**
+  </Step>
+
+  <Step title="Add Environment Variables">
+    Add the following variables to your `.env` file:
+
+    <CodeGroup>
+    ```bash .env
+    GOOGLE_CLIENT_ID=your_google_client_id_here
+    GOOGLE_CLIENT_SECRET=your_google_client_secret_here
+    ```
+    </CodeGroup>
+
+    <Warning>
+      Keep your Client Secret secure and never commit it to version control. Add `.env` to your `.gitignore` file.
+    </Warning>
+  </Step>
+
+  <Step title="Restart Your Application">
+    Restart your Forge application to apply the new environment variables:
+
+    <CodeGroup>
+    ```bash npm
+    npm run dev
+    ```
+
+    ```bash yarn
+    yarn dev
+    ```
+
+    ```bash pnpm
+    pnpm dev
+    ```
+    </CodeGroup>
+  </Step>
+</Steps>
+
+## Connect Your Account
+
+Once configured, users can connect their Google account:
+
+1. Navigate to the **Settings** page in your Forge dashboard
+2. Click **Connect Google Account**
+3. Authorize the requested permissions
+4. Your Google account is now linked and ready to use
+
+<Info>
+  The integration uses offline access with automatic token refresh, so you won't need to re-authenticate frequently.
+</Info>
+
+## Managing Your Connection
+
+You can manage your Google account connection from the Settings page:
+
+- **View status**: See if your account is connected
+- **Disconnect**: Remove the integration and revoke access
+- **Reconnect**: Refresh your connection if tokens expire
+
+## Troubleshooting
+
+### Authorization Error
+
+If you see "Authorization failed" during setup:
+
+- Verify your redirect URI exactly matches the one configured in Google Cloud Console
+- Ensure both Gmail API and Google Calendar API are enabled in your project
+- Check that your OAuth consent screen includes all required scopes
+
+### Token Expired
+
+If widgets show "Token expired" or similar errors:
+
+- Disconnect and reconnect your Google account from Settings
+- Verify `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are correctly set
+
+### Missing Scopes
+
+If certain features don't work:
+
+- Ensure you added all required scopes to your OAuth consent screen
+- Disconnect and reconnect to re-authorize with updated scopes

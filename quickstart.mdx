@@ -1,80 +1,223 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quickstart
+description: Get started with Forge in minutes - from installation to your first dashboard
 ---
 
-## Get started in three steps
+# Quickstart
 
-Get your documentation site running locally and make your first customization.
+This guide will help you set up Forge and create your first customized dashboard with widgets in just a few minutes.
 
-### Step 1: Set up your local environment
+## Prerequisites
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+Before you begin, make sure you have:
 
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
-
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
-
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
-
-## Next steps
-
-Now that you have your docs running, explore these key features:
-
-<CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
-</CardGroup>
+- **Node.js v18 or later** installed on your system
+- **PostgreSQL database** (local or hosted)
+- **Redis instance** (we recommend Upstash for easy setup)
+- **Blob storage** (Vercel Blob or compatible alternative)
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+If you're just getting started, we recommend using [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres) and [Upstash Redis](https://upstash.com) for quick setup.
+</Note>
+
+## Installation
+
+<Steps>
+  <Step title="Clone the repository">
+    First, clone the Forge repository and navigate into the directory:
+
+    ```bash
+    git clone https://github.com/mvriu5/forge.git
+    cd forge
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    Install all required npm packages:
+
+    ```bash
+    npm install
+    ```
+
+    This will install Next.js 16, React 19, Drizzle ORM, BetterAuth, and all other dependencies.
+  </Step>
+
+  <Step title="Set up environment variables">
+    Create a `.env` file in the root directory with your configuration:
+
+    ```bash
+    # Application URLs
+    NEXT_PUBLIC_APP_URL=http://localhost:3000
+    BETTER_AUTH_URL=http://localhost:3000
+    BETTER_AUTH_SECRET=your-random-secret-key-here
+
+    # Database
+    DATABASE_URI=postgresql://user:password@localhost:5432/forge
+
+    # Redis (Upstash)
+    UPSTASH_REDIS_REST_URL=https://your-redis.upstash.io
+    UPSTASH_REDIS_REST_TOKEN=your-redis-token
+
+    # Blob Storage
+    BLOB_READ_WRITE_TOKEN=your-blob-token
+    ```
+
+    <Warning>
+    Generate a strong random string for `BETTER_AUTH_SECRET`. You can use: `openssl rand -base64 32`
+    </Warning>
+  </Step>
+
+  <Step title="Run database migrations">
+    Set up the database schema using Drizzle:
+
+    ```bash
+    npx drizzle-kit push
+    ```
+
+    This creates the necessary tables for users, sessions, dashboards, widgets, and settings.
+  </Step>
+
+  <Step title="Start the development server">
+    Launch Forge in development mode:
+
+    ```bash
+    npm run dev
+    ```
+
+    Open [http://localhost:3000](http://localhost:3000) in your browser to see Forge running.
+  </Step>
+</Steps>
+
+## Create Your First Dashboard
+
+Now that Forge is running, let's set up your first dashboard:
+
+<Steps>
+  <Step title="Create an account">
+    1. Navigate to [http://localhost:3000](http://localhost:3000)
+    2. Click **Sign Up** to create a new account
+    3. Enter your name, email, and password
+    4. You'll be automatically logged in after registration
+  </Step>
+
+  <Step title="Complete onboarding">
+    After signing up, you'll see the onboarding dialog:
+
+    1. Enter a name for your first dashboard (e.g., "Work Dashboard" or "Personal")
+    2. Choose a theme preference (Light or Dark mode)
+    3. Click **Get Started** to complete the setup
+
+    Forge will automatically create your first empty dashboard.
+  </Step>
+
+  <Step title="Add your first widget">
+    Now let's add a widget to your dashboard:
+
+    1. Click the **+ Add Widget** button in the top-right corner
+    2. Browse the available widgets (Clock, Weather, Todo, etc.)
+    3. Select a widget type - let's start with **Clock** since it requires no setup
+    4. The widget will appear on your dashboard
+
+    <Info>
+    Some widgets like Clock, Countdown, and Bookmarks work immediately. Others like Meetings and Inbox require OAuth integration with Google.
+    </Info>
+  </Step>
+
+  <Step title="Customize the layout">
+    Forge uses a drag-and-drop grid system:
+
+    1. Click **Edit Mode** in the top-right to enable editing
+    2. Drag the widget to reposition it on the grid
+    3. Resize by dragging the corners (each widget has min/max size constraints)
+    4. Add more widgets to build your perfect layout
+    5. Click **Save** when you're done
+
+    Changes are automatically saved to your account.
+  </Step>
+</Steps>
+
+## Add More Widgets
+
+Now that you have your first widget, let's add a few more useful ones:
+
+<Tabs>
+  <Tab title="No Setup Required">
+    These widgets work immediately without any integrations:
+
+    - **Clock** - Display current time with timezone support
+    - **Weather** - Get local weather using geolocation (Open-Meteo API)
+    - **Todo** - Manage tasks with checkboxes and reminders
+    - **Bookmarks** - Save and organize favorite links
+    - **Countdown** - Track time until important events
+    - **Kanban** - Organize tasks in a visual board
+    - **Markdown Editor** - Draft notes with rich text formatting
+  </Tab>
+
+  <Tab title="Requires OAuth">
+    These widgets require connecting external accounts:
+
+    - **Meetings** - Requires [Google OAuth](/integrations/google) for Calendar access
+    - **Inbox** - Requires [Google OAuth](/integrations/google) for Gmail access
+    - **GitHub** - Requires [GitHub OAuth](/integrations/github) for repos/issues/PRs
+    - **GitHub Heatmap** - Requires [GitHub OAuth](/integrations/github) for contribution data
+    - **Stocks** - Requires [Coinbase OAuth](/integrations/coinbase) for crypto prices
+
+    See the [Integrations](/features/integrations) section to learn how to connect these services.
+  </Tab>
+</Tabs>
+
+## Next Steps
+
+Congratulations! You've successfully set up Forge and created your first dashboard. Here's what to explore next:
+
+<CardGroup cols={2}>
+  <Card title="Connect Integrations" icon="plug" href="/integrations/google">
+    Link Google, GitHub, or Notion to unlock powerful widgets
+  </Card>
+  <Card title="Explore Widgets" icon="grid" href="/widgets/overview">
+    Learn about all 13 available widgets and their features
+  </Card>
+  <Card title="Multiple Dashboards" icon="layer-group" href="/features/dashboards">
+    Organize widgets across different dashboards for different contexts
+  </Card>
+  <Card title="Customize Themes" icon="palette" href="/features/customization">
+    Personalize colors and layout to match your workflow
+  </Card>
+</CardGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Database connection failed">
+    Make sure your PostgreSQL database is running and the `DATABASE_URI` in your `.env` file is correct. Test the connection:
+
+    ```bash
+    psql $DATABASE_URI -c "SELECT 1"
+    ```
+  </Accordion>
+
+  <Accordion title="Redis connection errors">
+    Verify your Upstash Redis credentials are correct. You can test the connection using the Upstash dashboard or with:
+
+    ```bash
+    curl -H "Authorization: Bearer $UPSTASH_REDIS_REST_TOKEN" $UPSTASH_REDIS_REST_URL/ping
+    ```
+  </Accordion>
+
+  <Accordion title="Build errors after npm install">
+    Try clearing your cache and reinstalling:
+
+    ```bash
+    rm -rf node_modules package-lock.json
+    npm install
+    ```
+  </Accordion>
+
+  <Accordion title="Widgets not loading">
+    Check the browser console for errors. Make sure all required environment variables are set and the API endpoints are responding. Test by visiting `http://localhost:3000/api/dashboards` - you should see a JSON response.
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+Need more help? Check out the [Self-Hosting Guide](/self-hosting/setup) for detailed deployment instructions or visit the [GitHub Issues](https://github.com/mvriu5/forge/issues) page.
 </Note>

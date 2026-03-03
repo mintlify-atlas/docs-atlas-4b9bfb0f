@@ -1,0 +1,264 @@
+---
+title: Customization
+description: Personalize your dashboard with theming, layout controls, and drag-and-drop functionality
+---
+
+## Overview
+
+Forge provides extensive customization options to make your dashboard truly yours. From visual theming to precise widget positioning, you have complete control over how your workspace looks and feels.
+
+## Theming
+
+Forge supports comprehensive theming with light and dark modes, plus customizable color schemes.
+
+### Dark Mode
+
+<Tabs>
+  <Tab title="Automatic">
+    Forge can automatically switch between light and dark modes based on your system preferences. This ensures your dashboard always matches your operating system's appearance.
+  </Tab>
+  
+  <Tab title="Manual">
+    Override system settings by manually selecting your preferred theme. Use the theme toggle in your user settings to switch between light and dark modes instantly.
+  </Tab>
+</Tabs>
+
+### Color System
+
+The theme system uses CSS variables for consistent, customizable colors:
+
+<CardGroup cols={2}>
+  <Card title="Background Colors" icon="palette">
+    - **Primary**: Main background color
+    - **Secondary**: Secondary surfaces and cards
+    - **Tertiary**: Hover states and subtle backgrounds
+    - **Brand**: Accent color for important elements
+  </Card>
+  
+  <Card title="Text Colors" icon="font">
+    - **Primary**: Main text color
+    - **Secondary**: Muted text for less important content
+    - **Tertiary**: Subtle text for hints and placeholders
+    - **Inverted**: Contrast text for dark backgrounds
+  </Card>
+  
+  <Card title="Semantic Colors" icon="circle-exclamation">
+    - **Error**: Red for errors and destructive actions
+    - **Warning**: Yellow/orange for warnings
+    - **Success**: Green for successful actions
+    - **Info**: Blue for informational messages
+  </Card>
+  
+  <Card title="Border & Effects" icon="border-all">
+    - **Border**: Consistent border colors
+    - **Ring**: Focus indicator colors
+    - **Fill**: Icon and graphic fills
+    - **Outline**: Outline colors for focused elements
+  </Card>
+</CardGroup>
+
+<Info>
+  Theme colors are defined in CSS variables, making it easy to create custom themes or adjust the existing color palette to match your preferences.
+</Info>
+
+## Layout System
+
+Forge uses a responsive grid system that adapts to different screen sizes while maintaining precise control over widget positioning.
+
+### Grid-Based Layout
+
+The dashboard uses a grid layout where each widget occupies a specific position:
+
+<Steps>
+  <Step title="Grid Structure">
+    The desktop view uses a multi-column grid where widgets can span multiple grid cells both horizontally and vertically.
+  </Step>
+  
+  <Step title="Widget Positioning">
+    Each widget has `positionX` and `positionY` coordinates that determine its location on the grid.
+  </Step>
+  
+  <Step title="Widget Sizing">
+    Widgets have `width` and `height` values that define how many grid cells they occupy.
+  </Step>
+  
+  <Step title="Auto-Layout">
+    The system prevents overlapping widgets and provides visual feedback when positioning widgets.
+  </Step>
+</Steps>
+
+### Responsive Breakpoints
+
+<Tabs>
+  <Tab title="Desktop">
+    Full grid layout with multiple columns:
+    - Widgets maintain custom positions
+    - Drag-and-drop enabled for repositioning
+    - Grid overlay visible in edit mode
+    - Optimal for large screens and multi-tasking
+  </Tab>
+  
+  <Tab title="Tablet">
+    Optimized for medium screens:
+    - Reduced column count
+    - Widgets automatically resize
+    - Touch-optimized controls
+    - Maintains functionality with adapted layout
+  </Tab>
+  
+  <Tab title="Mobile">
+    Single-column stack layout:
+    - All widgets displayed full-width
+    - Vertical scrolling
+    - Touch-first interaction
+    - Simplified layout for small screens
+  </Tab>
+</Tabs>
+
+<Tip>
+  Each widget type has predefined sizes for different screen sizes. The system automatically applies the appropriate size based on the current viewport.
+</Tip>
+
+## Drag-and-Drop
+
+Forge's drag-and-drop system makes it easy to arrange your dashboard exactly how you want it.
+
+### How It Works
+
+<Steps>
+  <Step title="Enable Edit Mode">
+    Click the "Edit" button in the navigation to activate drag-and-drop functionality.
+  </Step>
+  
+  <Step title="Start Dragging">
+    Click and hold on any widget header to begin dragging. The widget becomes semi-transparent to indicate it's being moved.
+  </Step>
+  
+  <Step title="Position Widget">
+    Drag the widget across the grid. Valid drop zones are highlighted as you hover over them.
+  </Step>
+  
+  <Step title="Drop Widget">
+    Release the mouse button to place the widget in its new position. The layout updates automatically.
+  </Step>
+  
+  <Step title="Save Changes">
+    Exit edit mode to save your new layout. Changes persist across sessions.
+  </Step>
+</Steps>
+
+### Drag-and-Drop Features
+
+<CardGroup cols={2}>
+  <Card title="Visual Feedback" icon="eye">
+    - Dragging widgets become semi-transparent
+    - Valid drop zones highlight on hover
+    - Grid cells show availability
+    - Smooth animations during transitions
+  </Card>
+  
+  <Card title="Collision Detection" icon="shield">
+    - Prevents widget overlap
+    - Smart positioning suggestions
+    - Snaps to grid for precise alignment
+    - Reverts to original position if drop is invalid
+  </Card>
+  
+  <Card title="Touch Support" icon="hand">
+    - Full touch screen support
+    - Long-press to initiate drag on mobile
+    - Touch-optimized drop zones
+    - Haptic feedback on supported devices
+  </Card>
+  
+  <Card title="Accessibility" icon="universal-access">
+    - Keyboard navigation support
+    - Screen reader compatible
+    - Clear visual indicators
+    - Configurable activation distance
+  </Card>
+</CardGroup>
+
+### Advanced Positioning
+
+For precise widget placement:
+
+1. **Grid Overlay**: In edit mode, a subtle grid overlay helps align widgets perfectly
+2. **Snap to Grid**: Widgets automatically snap to grid cell boundaries for clean layouts
+3. **Drop Zones**: Only valid positions are highlighted, preventing invalid placements
+4. **Auto-Save**: Position changes are saved immediately when you drop a widget
+
+<Warning>
+  Drag-and-drop is only available on desktop views. On mobile and tablet, widgets use a fixed stacked layout for optimal viewing.
+</Warning>
+
+## Layout Best Practices
+
+### Organization Strategies
+
+<Tabs>
+  <Tab title="By Priority">
+    Place your most important widgets at the top of your dashboard:
+    - Frequently accessed information first
+    - Time-sensitive widgets (meetings, inbox) in prominent positions
+    - Reference widgets (weather, clock) in supporting positions
+  </Tab>
+  
+  <Tab title="By Category">
+    Group related widgets together:
+    - Work-related widgets in one section
+    - Personal widgets in another
+    - Information widgets grouped separately
+    - Creates clear visual zones on your dashboard
+  </Tab>
+  
+  <Tab title="By Frequency">
+    Organize based on how often you use each widget:
+    - Daily-use widgets in the primary view
+    - Weekly-check widgets below the fold
+    - Reference widgets at the bottom
+    - Minimizes scrolling for common tasks
+  </Tab>
+</Tabs>
+
+### Visual Balance
+
+Create an aesthetically pleasing dashboard:
+
+1. **Spacing**: Leave some empty space between widgets for breathing room
+2. **Alignment**: Align widget edges where possible for a clean look
+3. **Size Variation**: Mix large and small widgets to create visual interest
+4. **Symmetry**: Consider balanced layouts for a professional appearance
+
+<Tip>
+  Take a screenshot of your ideal layout before making major changes. This helps you remember what worked well if you want to revert.
+</Tip>
+
+## Customization Tips
+
+### For Productivity
+- Keep the most frequently used widgets in the top-left (natural reading start point)
+- Use larger widgets for primary tasks, smaller ones for reference information
+- Group task management widgets (Todo, Kanban) together for workflow efficiency
+
+### For Information Display
+- Place passive information widgets (Weather, Clock, Crypto) in peripheral areas
+- Use the GitHub Heatmap widget as a visual anchor point
+- Position the Frame widget for embedded tools where you'll reference them most
+
+### For Focus
+- Minimize visual clutter by limiting the number of widgets per dashboard
+- Use multiple dashboards instead of cramming everything into one view
+- Hide widgets you rarely use by moving them to dedicated dashboards
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Widget System" icon="grid-2" href="/features/widgets">
+    Explore all available widgets and their capabilities
+  </Card>
+  
+  <Card title="Integrations" icon="plug" href="/features/integrations">
+    Connect external services to unlock more widget functionality
+  </Card>
+</CardGroup>

@@ -1,0 +1,296 @@
+---
+title: Kanban Board Widget
+description: Organize tasks in a visual Kanban board with drag-and-drop
+---
+
+The Kanban Board widget provides a full-featured task management system with columns, cards, drag-and-drop, and color customization.
+
+## Features
+
+- **Multiple Columns**: Create unlimited categories/stages
+- **Drag & Drop Cards**: Move tasks between columns
+- **Drag & Drop Columns**: Reorder columns
+- **Color Coding**: Customize column colors
+- **Task Management**: Add, edit, and delete tasks
+- **Scrollable Columns**: Handle many tasks per column
+- **Horizontal Scrolling**: Support for many columns
+- **Touch Support**: Full mobile/tablet functionality
+
+## Setup
+
+<Steps>
+  <Step title="Add Widget">
+    Add the Kanban widget to your dashboard
+  </Step>
+  
+  <Step title="Create First Column">
+    Click the + icon to create your first category
+  </Step>
+  
+  <Step title="Add Tasks">
+    Type tasks in the input field at the bottom of each column
+  </Step>
+  
+  <Step title="Organize">
+    Drag cards between columns to track progress
+  </Step>
+</Steps>
+
+## Creating Columns
+
+<Steps>
+  <Step title="Click Plus Icon">
+    Click the + button in the widget header
+  </Step>
+  
+  <Step title="Enter Column Title">
+    Give the column a name (e.g., "To Do", "In Progress", "Done")
+  </Step>
+  
+  <Step title="Choose Color">
+    Select a color from the palette (24 vibrant options)
+  </Step>
+  
+  <Step title="Save">
+    Click "Add column" to create it
+  </Step>
+</Steps>
+
+### Column Colors
+
+Choose from 24 vibrant colors:
+- **Red**: Knallrot (#FF4C4C)
+- **Orange**: Helles Orange (#FF914D), Apricot (#FFAB76)
+- **Yellow**: Sattgelb (#FFC300), Sonnengelb (#FFDE59), Zitronengelb (#FFFF8F)
+- **Green**: Neongrün (#90EE02), Mintgrün (#8CFF98), Sanftgrün (#C1FFD7)
+- **Cyan**: Türkis (#00E0B8), Neon-Aqua (#00FFAB), Eisgrün (#A1E3D8)
+- **Blue**: Himmelsblau (#00BFFF), Klares Blau (#4B7EFF), Babyblau (#85E3FF)
+- **Purple**: Violett (#A066FF), Flieder (#B28DFF), Lavendel (#D0AAFF)
+- **Pink**: Knallpink (#FF66C4), Rosé (#FF8FAB), Zuckerwatte (#FFB5E8)
+- **Pastels**: Various soft colors
+
+## Managing Tasks
+
+### Adding Tasks
+
+<Steps>
+  <Step title="Type Task Title">
+    Click the input field at the bottom of a column
+  </Step>
+  
+  <Step title="Submit">
+    Press Enter or click the forward arrow button
+  </Step>
+  
+  <Step title="Task Created">
+    The task card appears in the column
+  </Step>
+</Steps>
+
+### Deleting Tasks
+
+1. Hover over a task card
+2. Click the trash icon that appears
+3. Task is removed immediately
+
+### Moving Tasks Between Columns
+
+Drag tasks to different columns:
+1. Click and hold on a task card
+2. Drag to the target column
+3. Release to drop
+4. Task updates automatically
+
+**Visual Feedback**:
+- Dragged card becomes semi-transparent (50% opacity)
+- Cursor changes to grabbing hand
+- Drop zones highlighted
+
+## Drag & Drop Details
+
+### Moving Tasks Within a Column
+
+- Reorder tasks by priority
+- Drag up or down within the same column
+- Visual feedback during drag
+- Auto-saves new order
+
+### Moving Tasks Between Columns
+
+- Drag from any column to any other column
+- Drop above, below, or at the end of a column
+- Task moves to new column instantly
+- Previous column updates automatically
+
+### Reordering Columns
+
+- Click and drag column headers
+- Horizontal drag motion only
+- Reorder workflow stages
+- All cards move with the column
+
+### Touch Support
+
+**Mobile & Tablet**:
+- Long-press (250ms) to start dragging
+- 5px movement tolerance
+- Smooth dragging experience
+- Works for both cards and columns
+
+## Column Management
+
+### Deleting Columns
+
+<Warning>
+  Deleting a column also deletes all tasks within it. This action cannot be undone.
+</Warning>
+
+<Steps>
+  <Step title="Click Trash Icon">
+    Click the trash icon in the column header
+  </Step>
+  
+  <Step title="Confirm">
+    Column and all its tasks are deleted immediately
+  </Step>
+</Steps>
+
+### Column Styling
+
+Each column displays:
+- **Title**: Column name in colored text
+- **Color Border**: Bottom border in selected color
+- **Background**: Translucent color background (20% opacity)
+- **Cards**: Matching colored borders and backgrounds
+
+## Card Styling
+
+Tasks inherit column colors:
+- **Border**: Matching column color (30% opacity)
+- **Background**: Matching column color (20% opacity)
+- **Text**: Primary theme color
+- **Delete Button**: Appears on hover
+
+## Scrolling Behavior
+
+### Vertical Scrolling
+
+Each column scrolls independently:
+- When cards exceed column height
+- Custom scrollbar styling
+- Smooth scrolling
+
+### Horizontal Scrolling
+
+The board scrolls horizontally:
+- When columns exceed widget width
+- Minimum 320px width maintained
+- Custom scrollbar styling
+- Touch-friendly scrolling
+
+## Common Workflows
+
+### Basic To-Do Board
+
+1. Create columns: "To Do", "In Progress", "Done"
+2. Add tasks to "To Do"
+3. Drag tasks through workflow stages
+4. Archive completed tasks
+
+### Agile Sprint Board
+
+1. Columns: "Backlog", "To Do", "In Progress", "Review", "Done"
+2. Color code by priority or type
+3. Track sprint progress visually
+4. Reorder by priority
+
+### Project Stages
+
+1. Columns represent project phases
+2. Tasks are deliverables or milestones
+3. Move tasks as project progresses
+4. Multiple projects in different columns
+
+## Storage
+
+The Kanban board stores:
+- **Columns**: Array of column objects
+- **Column Properties**: ID, title, color, cards array
+- **Card Properties**: ID, title
+- **Order**: Preserved exactly as displayed
+
+All data saves automatically on every change.
+
+## Performance
+
+Optimized for:
+- **Many Columns**: Up to 20+ columns
+- **Many Cards**: Hundreds of cards total
+- **Smooth Dragging**: Optimized React rendering
+- **Fast Updates**: Efficient state management
+
+## Troubleshooting
+
+<Warning>
+  Common issues and solutions:
+  
+  **Can't drag items**: Ensure you're clicking and holding (or long-pressing on mobile) before dragging
+  
+  **Columns not reordering**: Make sure you're dragging the column header, not a card
+  
+  **Tasks disappearing**: Check if auto-delete is enabled or if you accidentally deleted the column
+  
+  **Layout issues**: Refresh the page to reset the widget
+</Warning>
+
+### Drag Issues
+
+**Mouse**:
+- 10px activation threshold
+- Must drag slightly before it activates
+
+**Touch**:
+- 250ms long-press required
+- 5px tolerance for accidental movement
+
+### Visual Issues
+
+If colors aren't showing:
+- Refresh the page
+- Check that a color was selected
+- Try recreating the column
+
+## Keyboard Shortcuts
+
+- **Enter**: Submit new task
+- **Escape**: (Within form) Clear input
+
+## Integration Possibilities
+
+While not currently integrated, the Kanban board structure could support:
+- Import from Trello, Asana, or Linear
+- Sync with project management tools
+- Export to other formats
+- Collaboration features
+
+## Widget Sizes
+
+- **Desktop**: 2 columns × 2 rows
+- **Tablet**: 2 columns × 2 rows
+- **Mobile**: 1 column × 2 rows
+
+<Info>
+  The larger size (2×2) gives the Kanban board room to display multiple columns side-by-side. On mobile, the horizontal scroll ensures all columns remain accessible.
+</Info>
+
+## Best Practices
+
+**Limit Column Count**: 3-7 columns is optimal for most workflows
+
+**Clear Naming**: Use short, descriptive column names
+
+**Color Coding**: Use colors to indicate priority or category
+
+**Regular Cleanup**: Archive or delete completed tasks
+
+**Consistent Process**: Define clear criteria for moving tasks between columns

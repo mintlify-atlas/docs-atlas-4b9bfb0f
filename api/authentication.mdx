@@ -1,0 +1,158 @@
+---
+title: Authentication
+description: Authenticate API requests using BetterAuth session cookies
+---
+
+All Forge API endpoints require authentication using session cookies provided by BetterAuth.
+
+## How It Works
+
+Forge uses [BetterAuth](https://www.better-auth.com/) for authentication. When a user signs in through the web interface, a session cookie is created and automatically included in subsequent requests.
+
+### Session Cookie
+
+The session is stored in a cookie that is:
+
+- **HttpOnly** - Cannot be accessed by JavaScript
+- **Secure** - Only transmitted over HTTPS in production
+- **SameSite** - Protected against CSRF attacks
+
+### Making Authenticated Requests
+
+When making API requests from:
+
+**Browser/Web Application:**
+```javascript
+fetch('/api/dashboards', {
+  method: 'GET',
+  credentials: 'include' // Include cookies
+})
+```
+
+**cURL:**
+```bash
+curl -X GET http://localhost:3000/api/dashboards \
+  -H "Cookie: session=your-session-token" \
+  -H "Content-Type: application/json"
+```
+
+**Node.js with fetch:**
+```javascript
+import fetch from 'node-fetch';
+
+const response = await fetch('http://localhost:3000/api/dashboards', {
+  headers: {
+    'Cookie': 'session=your-session-token',
+    'Content-Type': 'application/json'
+  }
+});
+```
+
+## Getting a Session Token
+
+### Web Application
+
+In a web application, users authenticate through the BetterAuth login flow:
+
+1. User visits the login page
+2. Signs in with email/password or OAuth provider
+3. BetterAuth creates a session cookie automatically
+4. All subsequent API requests include the cookie
+
+### Programmatic Access
+
+For server-to-server or script-based access, you'll need to:
+
+1. Authenticate using BetterAuth's API endpoints
+2. Extract the session cookie from the response
+3. Include it in subsequent requests
+
+```javascript
+// Example: Login programmatically
+const loginResponse = await fetch('http://localhost:3000/api/auth/sign-in', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'user@example.com',
+    password: 'password123'
+  })
+});
+
+// Extract session cookie
+const cookies = loginResponse.headers.get('set-cookie');
+const sessionCookie = cookies.split(';')[0];
+
+// Use in subsequent requests
+const dashboardsResponse = await fetch('http://localhost:3000/api/dashboards', {
+  headers: {
+    'Cookie': sessionCookie
+  }
+});
+```
+
+## Session Verification
+
+Every API endpoint verifies the session using:
+
+```typescript
+const session = await auth.api.getSession({
+  headers: await headers()
+});
+
+if (!session) {
+  return new NextResponse("Unauthorized", { status: 401 });
+}
+```
+
+The `session` object contains:
+
+```typescript
+{
+  user: {
+    id: string,
+    email: string,
+    name: string,
+    emailVerified: boolean,
+    image?: string
+  },
+  session: {
+    id: string,
+    token: string,
+    expiresAt: Date,
+    userId: string
+  }
+}
+```
+
+## Unauthorized Response
+
+If authentication fails, the API returns:
+
+```http
+HTTP/1.1 401 Unauthorized
+Content-Type: text/plain
+
+Unauthorized
+```
+
+## Security Best Practices
+
+<Warning>
+  Never expose session tokens in client-side code, logs, or error messages. Always use HTTPS in production.
+</Warning>
+
+- Store session cookies securely
+- Use HTTPS in production to prevent token interception
+- Implement proper session expiration and refresh mechanisms
+- Never log or expose session tokens
+- Validate sessions on every request
+
+## OAuth Providers
+
+Forge supports authentication through:
+
+- Google OAuth
+- GitHub OAuth
+- Notion OAuth
+
+Connected accounts are managed through the [Accounts API](/api/accounts).

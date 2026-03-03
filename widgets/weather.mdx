@@ -1,0 +1,183 @@
+---
+title: Weather Widget
+description: View local weather forecasts based on your geolocation
+---
+
+The Weather widget displays current weather conditions and hourly forecasts for your location using geolocation and Open-Meteo API.
+
+## Features
+
+- **Current Weather**: Real-time temperature and conditions
+- **Hourly Forecast**: Next 7 hours of weather data
+- **Auto-Location**: Uses browser geolocation to detect your position
+- **Weather Icons**: Visual icons for different weather conditions
+- **Temperature Display**: Shows temperature in Celsius
+- **Location Name**: Displays your city/town
+- **Auto-Refresh**: Updates every 15 minutes
+
+## Setup
+
+<Steps>
+  <Step title="Enable Geolocation">
+    Allow browser access to your location when prompted
+  </Step>
+  
+  <Step title="View Weather Data">
+    Widget automatically fetches weather for your location
+  </Step>
+</Steps>
+
+<Note>
+  The widget requires geolocation permission to function. Your location coordinates are stored locally to avoid repeated permission prompts.
+</Note>
+
+## Configuration
+
+### Geolocation
+
+The widget uses the browser's Geolocation API:
+- Automatically requests location permission on first load
+- Stores coordinates in localStorage to avoid repeated prompts
+- Falls back to manual location selection if permission is denied
+
+### Time Format
+
+The hourly forecast uses your global time format setting (12-hour or 24-hour).
+
+## Weather Display
+
+### Current Weather (Large Card)
+
+The highlighted current weather section shows:
+- **Weather Icon**: Visual representation of conditions
+- **Temperature**: Current temperature in Celsius
+- **Colored Background**: Blue theme to indicate active weather
+
+### Hourly Forecast (Small Cards)
+
+The next 7 hours display:
+- **Time**: Hour in your preferred format
+- **Weather Icon**: Condition icon
+- **Temperature**: Forecasted temperature in Celsius
+
+### Location Information
+
+Shown in the widget header:
+- **Pin Icon**: Location marker
+- **City Name**: Detected city/town name from reverse geocoding
+
+## Weather Conditions
+
+The widget displays various weather conditions with appropriate icons:
+
+**Clear & Sunny**:
+- Sun icon for clear skies
+- Cloud-sun for partly cloudy
+
+**Cloudy**:
+- Cloud icons for overcast conditions
+- Cloud-fog for foggy weather
+
+**Rain**:
+- Cloud-drizzle for light rain
+- Cloud-rain for moderate to heavy rain
+
+**Snow**:
+- Cloud-snow for snowy conditions
+
+**Severe Weather**:
+- Cloud-lightning for thunderstorms
+- Cloud-hail for hail
+
+## Data Sources
+
+### Weather API
+
+**Provider**: Open-Meteo
+
+**Endpoint**: `https://api.open-meteo.com/v1/forecast`
+
+**Parameters**:
+- Latitude and longitude from geolocation
+- Hourly temperature (2m above ground)
+- Weather condition codes
+
+**Update Frequency**: Every 15 minutes
+
+### Location API
+
+**Provider**: OpenStreetMap Nominatim
+
+**Endpoint**: `https://nominatim.openstreetmap.org/reverse`
+
+**Purpose**: Reverse geocoding to get city name from coordinates
+
+**Headers**: Includes User-Agent for proper API usage
+
+## Weather Code Mapping
+
+Open-Meteo weather codes are mapped to visual icons:
+
+- `0`: Clear sky → Sun
+- `1-3`: Partly cloudy → Cloud-sun
+- `45, 48`: Fog → Cloud-fog
+- `51, 53, 55`: Drizzle → Cloud-drizzle
+- `56, 57`: Freezing drizzle → Cloud-drizzle
+- `61, 63, 65`: Rain → Cloud-rain
+- `66, 67`: Freezing rain → Cloud-rain
+- `71, 73, 75, 77`: Snow → Cloud-snow
+- `80, 81, 82`: Rain showers → Cloud-rain
+- `85, 86`: Snow showers → Cloud-snow
+- `95`: Thunderstorm → Cloud-lightning
+- `96, 99`: Thunderstorm with hail → Cloud-hail
+
+## Troubleshooting
+
+<Warning>
+  If weather data isn't loading:
+  1. Check browser geolocation permissions
+  2. Ensure location services are enabled on your device
+  3. Try refreshing the page
+  4. Clear localStorage if you denied permission previously
+</Warning>
+
+### Geolocation Denied
+
+If you previously denied location permission:
+1. Click the lock icon in your browser's address bar
+2. Update location permissions to "Allow"
+3. Refresh the page
+
+Alternatively, clear the `weatherWidgetPermission` key from localStorage.
+
+### Location Not Detected
+
+**Browser Compatibility**: Ensure your browser supports the Geolocation API (all modern browsers do).
+
+**HTTPS Required**: Geolocation only works on HTTPS sites (or localhost for development).
+
+### Weather Data Errors
+
+If the weather API is unavailable:
+- An error message will display
+- Try again later
+- The service is free and has high availability
+
+## Privacy
+
+<Info>
+  Your location coordinates are stored only in your browser's localStorage. They are never sent to Forge servers—only to the weather and geocoding APIs to fetch data.
+</Info>
+
+## Widget Sizes
+
+- **Desktop**: 1 column × 1 row
+- **Tablet**: 1 column × 1 row
+- **Mobile**: 1 column × 1 row
+
+## Display Grid
+
+The weather widget uses a 4×2 grid layout:
+- **Row 1**: Current weather + 3 hourly forecasts
+- **Row 2**: 4 additional hourly forecasts
+- Total of 8 time periods (current + 7 hours ahead)

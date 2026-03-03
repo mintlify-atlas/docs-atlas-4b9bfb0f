@@ -1,0 +1,201 @@
+---
+title: 'Setup'
+description: 'Install and configure your self-hosted Forge instance'
+---
+
+Forge is designed to be fully self-hostable, giving you complete control over your data and infrastructure. This guide will walk you through setting up your own Forge instance.
+
+## Prerequisites
+
+Before you begin, ensure you have the following:
+
+- **Node.js** v18 or later (recommended: v20+)
+- **PostgreSQL** database (v14 or later recommended)
+- **Redis instance** - Upstash Redis or compatible Redis service
+- **Blob storage** - Vercel Blob or S3-compatible storage for file uploads
+- **Git** for cloning the repository
+
+<Note>
+Forge uses Next.js 16, Drizzle ORM for database management, and BetterAuth for authentication. Make sure your infrastructure supports these technologies.
+</Note>
+
+## Installation
+
+<Steps>
+  <Step title="Clone the repository">
+    Clone the Forge repository from GitHub:
+
+    ```bash
+    git clone https://github.com/mvriu5/forge.git
+    cd forge
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    Install all required Node.js packages using npm:
+
+    ```bash
+    npm install
+    ```
+
+    This will install all dependencies including:
+    - Next.js (v16.1.6+)
+    - Drizzle ORM for database operations
+    - BetterAuth for authentication
+    - Upstash Redis client
+    - React Query for data fetching
+    - And all other required packages
+  </Step>
+
+  <Step title="Configure environment variables">
+    Create a `.env` file in the root of the project:
+
+    ```bash
+    touch .env
+    ```
+
+    Add the required environment variables to your `.env` file. See the [Environment Variables](/self-hosting/environment-variables) page for a complete reference.
+
+    At minimum, you'll need:
+
+    ```bash
+    # Application URLs
+    NEXT_PUBLIC_APP_URL=http://localhost:3000
+    BETTER_AUTH_URL=http://localhost:3000
+
+    # Authentication
+    BETTER_AUTH_SECRET=your-secret-key-here
+
+    # Database
+    DATABASE_URI=postgresql://user:password@localhost:5432/forge
+
+    # Redis
+    UPSTASH_REDIS_REST_URL=https://your-redis-url.upstash.io
+    UPSTASH_REDIS_REST_TOKEN=your-redis-token
+
+    # Blob Storage
+    BLOB_READ_WRITE_TOKEN=your-blob-token
+    ```
+
+    <Warning>
+    Generate a strong, random string for `BETTER_AUTH_SECRET`. You can use:
+    ```bash
+    openssl rand -base64 32
+    ```
+    </Warning>
+  </Step>
+
+  <Step title="Set up the database">
+    Run database migrations using Drizzle Kit to create all necessary tables:
+
+    ```bash
+    npx drizzle-kit push
+    ```
+
+    This will create the following tables in your PostgreSQL database:
+    - `user` - User accounts
+    - `account` - OAuth provider connections
+    - `session` - User sessions
+    - `dashboard` - User dashboards
+    - `widget` - Dashboard widgets
+    - `settings` - User settings
+
+    <Note>
+    Drizzle Kit will connect to your database using the `DATABASE_URI` from your `.env` file. Make sure your PostgreSQL instance is running and accessible.
+    </Note>
+  </Step>
+
+  <Step title="Start the development server">
+    Start Forge in development mode:
+
+    ```bash
+    npm run dev
+    ```
+
+    The application will be available at `http://localhost:3000` (or the URL you specified in `NEXT_PUBLIC_APP_URL`).
+  </Step>
+
+  <Step title="Create your first account">
+    Open your browser and navigate to your Forge instance. You can create an account using:
+    - Email and password (enabled by default)
+    - GitHub OAuth (if configured)
+    - Google OAuth (if configured)
+
+    Once logged in, you can start creating dashboards and adding widgets.
+  </Step>
+</Steps>
+
+## Building for Production
+
+To build Forge for production deployment:
+
+<CodeGroup>
+```bash Build
+npm run build
+```
+
+```bash Start
+npm run start
+```
+</CodeGroup>
+
+The build process will:
+1. Compile TypeScript code
+2. Optimize React components (using React Compiler)
+3. Generate optimized static assets
+4. Create production-ready server bundles
+
+<Note>
+For production deployments, see the [Deployment](/self-hosting/deployment) guide for platform-specific instructions.
+</Note>
+
+## Verifying Your Installation
+
+After setup, verify everything is working:
+
+1. **Authentication**: Try logging in with email/password
+2. **Database**: Create a dashboard - it should persist after refresh
+3. **Redis**: Real-time notifications should work (test with widget updates)
+4. **Blob Storage**: Upload a profile picture in settings
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Environment Variables" icon="gear" href="/self-hosting/environment-variables">
+    Configure all environment variables for full functionality
+  </Card>
+  <Card title="Deployment" icon="rocket" href="/self-hosting/deployment">
+    Deploy Forge to production platforms
+  </Card>
+</CardGroup>
+
+## Troubleshooting
+
+### Database Connection Issues
+
+If you see database connection errors:
+
+- Verify your `DATABASE_URI` is correct
+- Ensure PostgreSQL is running and accessible
+- Check firewall rules allow connections to PostgreSQL port (default: 5432)
+- Verify the database user has proper permissions
+
+### Redis Connection Issues
+
+If Redis connection fails:
+
+- Verify your Upstash Redis URL and token are correct
+- Check if your Redis instance is active in the Upstash dashboard
+- Ensure your network allows outbound connections to Upstash
+
+### Build Errors
+
+If you encounter build errors:
+
+- Ensure you're using Node.js v18 or later
+- Delete `node_modules` and `.next` folders, then run `npm install` again
+- Check that all environment variables are properly set
+
+<Warning>
+If you're missing required environment variables, the build may fail or certain features may not work. Always check the console for specific error messages.
+</Warning>

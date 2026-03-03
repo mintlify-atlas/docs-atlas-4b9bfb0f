@@ -1,0 +1,432 @@
+---
+title: Widgets API
+description: Manage dashboard widgets
+---
+
+Widgets are individual components placed on dashboards. Each widget has a type, size, position, and optional configuration.
+
+## Widget Types
+
+Supported widget types:
+
+- `Bookmark` - Quick links
+- `Clock` - Time display
+- `Countdown` - Countdown timer
+- `Crypto` - Cryptocurrency prices
+- `Editor` - Text editor
+- `Frame` - Embedded iframe
+- `Github Heatmap` - GitHub contribution heatmap
+- `Github` - GitHub statistics
+- `Inbox` - Email inbox
+- `Kanban` - Kanban board
+- `Meetings` - Calendar meetings
+- `Todo` - Todo list
+- `Weather` - Weather information
+
+## Create Widget
+
+<CodeGroup>
+```bash cURL
+curl -X POST http://localhost:3000/api/widgets \
+  -H "Content-Type: application/json" \
+  -H "Cookie: session=your-session-token" \
+  -d '{
+    "dashboardId": "550e8400-e29b-41d4-a716-446655440000",
+    "widgetType": "Todo",
+    "height": 400,
+    "width": 300,
+    "positionX": 0,
+    "positionY": 0,
+    "config": {
+      "title": "My Tasks"
+    }
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('/api/widgets', {
+  method: 'POST',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    dashboardId: '550e8400-e29b-41d4-a716-446655440000',
+    widgetType: 'Todo',
+    height: 400,
+    width: 300,
+    positionX: 0,
+    positionY: 0,
+    config: {
+      title: 'My Tasks'
+    }
+  })
+});
+
+const widget = await response.json();
+```
+</CodeGroup>
+
+### Request Body
+
+<ParamField path="dashboardId" type="string (uuid)" required>
+  ID of the dashboard to add the widget to
+</ParamField>
+
+<ParamField path="widgetType" type="string" required>
+  Type of widget (see Widget Types above)
+</ParamField>
+
+<ParamField path="height" type="number" required>
+  Widget height in pixels
+</ParamField>
+
+<ParamField path="width" type="number" required>
+  Widget width in pixels
+</ParamField>
+
+<ParamField path="positionX" type="number" required>
+  Horizontal position on the dashboard
+</ParamField>
+
+<ParamField path="positionY" type="number" required>
+  Vertical position on the dashboard
+</ParamField>
+
+<ParamField path="config" type="object" optional>
+  Widget-specific configuration (key-value pairs)
+</ParamField>
+
+### Response
+
+<ResponseField name="id" type="string (uuid)">
+  Unique widget identifier
+</ResponseField>
+
+<ResponseField name="userId" type="string">
+  ID of the user who owns this widget
+</ResponseField>
+
+<ResponseField name="dashboardId" type="string (uuid)">
+  ID of the parent dashboard
+</ResponseField>
+
+<ResponseField name="widgetType" type="string">
+  Type of widget
+</ResponseField>
+
+<ResponseField name="height" type="number">
+  Widget height in pixels
+</ResponseField>
+
+<ResponseField name="width" type="number">
+  Widget width in pixels
+</ResponseField>
+
+<ResponseField name="positionX" type="number">
+  Horizontal position
+</ResponseField>
+
+<ResponseField name="positionY" type="number">
+  Vertical position
+</ResponseField>
+
+<ResponseField name="config" type="object">
+  Widget configuration
+</ResponseField>
+
+<ResponseField name="createdAt" type="string (ISO 8601)">
+  Creation timestamp
+</ResponseField>
+
+<ResponseField name="updatedAt" type="string (ISO 8601)">
+  Last update timestamp
+</ResponseField>
+
+<Tabs>
+  <Tab title="Success (200)">
+    ```json
+    {
+      "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+      "userId": "user123",
+      "dashboardId": "550e8400-e29b-41d4-a716-446655440000",
+      "widgetType": "Todo",
+      "height": 400,
+      "width": 300,
+      "positionX": 0,
+      "positionY": 0,
+      "config": {
+        "title": "My Tasks"
+      },
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-15T10:30:00.000Z"
+    }
+    ```
+  </Tab>
+  <Tab title="Error (400)">
+    ```json
+    "Invalid request body"
+    ```
+  </Tab>
+  <Tab title="Error (403)">
+    ```json
+    { "error": "Forbidden" }
+    ```
+    User does not own the specified dashboard.
+  </Tab>
+  <Tab title="Error (404)">
+    ```json
+    { "error": "Dashboard not found" }
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## Get Widgets
+
+Retrieve all widgets for the authenticated user, or widgets from a specific dashboard.
+
+<CodeGroup>
+```bash Get All User Widgets
+curl -X GET http://localhost:3000/api/widgets \
+  -H "Cookie: session=your-session-token"
+```
+
+```bash Get Dashboard Widgets
+curl -X GET "http://localhost:3000/api/widgets?dashboardId=550e8400-e29b-41d4-a716-446655440000" \
+  -H "Cookie: session=your-session-token"
+```
+
+```javascript JavaScript
+// Get all user widgets
+const response = await fetch('/api/widgets', {
+  credentials: 'include'
+});
+const widgets = await response.json();
+
+// Get widgets from specific dashboard
+const response = await fetch('/api/widgets?dashboardId=550e8400-e29b-41d4-a716-446655440000', {
+  credentials: 'include'
+});
+const widgets = await response.json();
+```
+</CodeGroup>
+
+### Query Parameters
+
+<ParamField query="dashboardId" type="string (uuid)" optional>
+  Dashboard ID to retrieve widgets from. If omitted, returns all user widgets.
+</ParamField>
+
+### Response
+
+Returns an array of widget objects.
+
+<Tabs>
+  <Tab title="Success (200)">
+    ```json
+    [
+      {
+        "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+        "userId": "user123",
+        "dashboardId": "550e8400-e29b-41d4-a716-446655440000",
+        "widgetType": "Todo",
+        "height": 400,
+        "width": 300,
+        "positionX": 0,
+        "positionY": 0,
+        "config": {
+          "title": "My Tasks"
+        },
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2024-01-15T10:30:00.000Z"
+      }
+    ]
+    ```
+  </Tab>
+  <Tab title="Error (403)">
+    ```json
+    { "error": "Forbidden" }
+    ```
+  </Tab>
+  <Tab title="Error (404)">
+    ```json
+    { "error": "Dashboard not found" }
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## Update Widget
+
+<CodeGroup>
+```bash cURL
+curl -X PUT http://localhost:3000/api/widgets \
+  -H "Content-Type: application/json" \
+  -H "Cookie: session=your-session-token" \
+  -d '{
+    "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "height": 500,
+    "width": 350,
+    "positionX": 100,
+    "positionY": 50,
+    "config": {
+      "title": "Updated Tasks"
+    }
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('/api/widgets', {
+  method: 'PUT',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    id: '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+    height: 500,
+    width: 350,
+    positionX: 100,
+    positionY: 50,
+    config: {
+      title: 'Updated Tasks'
+    }
+  })
+});
+
+const updatedWidget = await response.json();
+```
+</CodeGroup>
+
+### Request Body
+
+<ParamField path="id" type="string (uuid)" required>
+  Widget ID to update
+</ParamField>
+
+<ParamField path="height" type="number" optional>
+  New widget height in pixels
+</ParamField>
+
+<ParamField path="width" type="number" optional>
+  New widget width in pixels
+</ParamField>
+
+<ParamField path="positionX" type="number" optional>
+  New horizontal position
+</ParamField>
+
+<ParamField path="positionY" type="number" optional>
+  New vertical position
+</ParamField>
+
+<ParamField path="config" type="object" optional>
+  Updated widget configuration
+</ParamField>
+
+### Response
+
+Returns the updated widget object.
+
+<Tabs>
+  <Tab title="Success (200)">
+    ```json
+    {
+      "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+      "userId": "user123",
+      "dashboardId": "550e8400-e29b-41d4-a716-446655440000",
+      "widgetType": "Todo",
+      "height": 500,
+      "width": 350,
+      "positionX": 100,
+      "positionY": 50,
+      "config": {
+        "title": "Updated Tasks"
+      },
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-15T11:45:00.000Z"
+    }
+    ```
+  </Tab>
+  <Tab title="Error (400)">
+    ```json
+    "Invalid request body"
+    ```
+  </Tab>
+  <Tab title="Error (403)">
+    ```json
+    { "error": "Forbidden" }
+    ```
+  </Tab>
+  <Tab title="Error (404)">
+    ```json
+    { "error": "Widget not found or could not be updated" }
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## Delete Widget
+
+<CodeGroup>
+```bash cURL
+curl -X DELETE "http://localhost:3000/api/widgets?id=7c9e6679-7425-40de-944b-e07fc1f90ae7" \
+  -H "Cookie: session=your-session-token"
+```
+
+```javascript JavaScript
+const response = await fetch('/api/widgets?id=7c9e6679-7425-40de-944b-e07fc1f90ae7', {
+  method: 'DELETE',
+  credentials: 'include'
+});
+
+const deletedWidget = await response.json();
+```
+</CodeGroup>
+
+### Query Parameters
+
+<ParamField query="id" type="string (uuid)" required>
+  Widget ID to delete
+</ParamField>
+
+### Response
+
+Returns the deleted widget object.
+
+<Tabs>
+  <Tab title="Success (200)">
+    ```json
+    {
+      "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+      "userId": "user123",
+      "dashboardId": "550e8400-e29b-41d4-a716-446655440000",
+      "widgetType": "Todo",
+      "height": 500,
+      "width": 350,
+      "positionX": 100,
+      "positionY": 50,
+      "config": {
+        "title": "Updated Tasks"
+      },
+      "createdAt": "2024-01-15T10:30:00.000Z",
+      "updatedAt": "2024-01-15T11:45:00.000Z"
+    }
+    ```
+  </Tab>
+  <Tab title="Error (400)">
+    ```json
+    "Invalid request body"
+    ```
+  </Tab>
+  <Tab title="Error (403)">
+    ```json
+    { "error": "Forbidden" }
+    ```
+  </Tab>
+  <Tab title="Error (404)">
+    ```json
+    { "error": "Widget not found or could not be deleted" }
+    ```
+  </Tab>
+</Tabs>

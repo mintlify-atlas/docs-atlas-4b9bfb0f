@@ -1,0 +1,242 @@
+---
+title: Notifications API
+description: Manage user notifications
+---
+
+Notifications provide real-time updates to users. They are stored in Redis and support three types: messages, alerts, and reminders.
+
+## Notification Types
+
+- `message` - General informational messages
+- `alert` - Important alerts requiring attention
+- `reminder` - Time-based reminders
+
+## Get Notifications
+
+Retrieve the latest 50 notifications for the authenticated user.
+
+<CodeGroup>
+```bash cURL
+curl -X GET http://localhost:3000/api/notifications \
+  -H "Cookie: session=your-session-token"
+```
+
+```javascript JavaScript
+const response = await fetch('/api/notifications', {
+  credentials: 'include'
+});
+
+const notifications = await response.json();
+```
+</CodeGroup>
+
+### Response
+
+Returns an array of notification objects, sorted by creation time (newest first).
+
+<ResponseField name="id" type="string (uuid)">
+  Unique notification identifier
+</ResponseField>
+
+<ResponseField name="userId" type="string">
+  ID of the user this notification belongs to
+</ResponseField>
+
+<ResponseField name="type" type="string">
+  Notification type: `message`, `alert`, or `reminder`
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Notification message content
+</ResponseField>
+
+<ResponseField name="createdAt" type="string (ISO 8601)">
+  Creation timestamp
+</ResponseField>
+
+<Tabs>
+  <Tab title="Success (200)">
+    ```json
+    [
+      {
+        "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        "userId": "user123",
+        "type": "message",
+        "message": "Your dashboard was updated successfully",
+        "createdAt": "2024-01-20T15:30:00.000Z"
+      },
+      {
+        "id": "9e107d9d-775e-49c4-8b6d-0a5d7e8c9f2b",
+        "userId": "user123",
+        "type": "alert",
+        "message": "Widget configuration requires attention",
+        "createdAt": "2024-01-20T14:20:00.000Z"
+      },
+      {
+        "id": "3c185fad-8db4-4c5d-9e1f-7b8a9c0d1e2f",
+        "userId": "user123",
+        "type": "reminder",
+        "message": "Meeting starts in 15 minutes",
+        "createdAt": "2024-01-20T13:45:00.000Z"
+      }
+    ]
+    ```
+  </Tab>
+  <Tab title="Error (401)">
+    ```text
+    Unauthorized
+    ```
+  </Tab>
+</Tabs>
+
+<Info>
+  Notifications are limited to the 50 most recent entries per user.
+</Info>
+
+---
+
+## Create Notification
+
+Create a new notification for the authenticated user.
+
+<CodeGroup>
+```bash cURL
+curl -X POST http://localhost:3000/api/notifications \
+  -H "Content-Type: application/json" \
+  -H "Cookie: session=your-session-token" \
+  -d '{
+    "type": "message",
+    "message": "Your dashboard was updated successfully"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('/api/notifications', {
+  method: 'POST',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    type: 'message',
+    message: 'Your dashboard was updated successfully'
+  })
+});
+
+const notification = await response.json();
+```
+</CodeGroup>
+
+### Request Body
+
+<ParamField path="type" type="string" required>
+  Notification type: `message`, `alert`, or `reminder`
+</ParamField>
+
+<ParamField path="message" type="string" required>
+  Notification message content
+</ParamField>
+
+### Response
+
+Returns the created notification object.
+
+<Tabs>
+  <Tab title="Success (200)">
+    ```json
+    {
+      "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "userId": "user123",
+      "type": "message",
+      "message": "Your dashboard was updated successfully",
+      "createdAt": "2024-01-20T15:30:00.000Z"
+    }
+    ```
+  </Tab>
+  <Tab title="Error (400)">
+    ```json
+    "Invalid request body"
+    ```
+  </Tab>
+  <Tab title="Error (401)">
+    ```text
+    Unauthorized
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## Clear Notifications
+
+Delete all notifications for the authenticated user.
+
+<CodeGroup>
+```bash cURL
+curl -X DELETE http://localhost:3000/api/notifications \
+  -H "Cookie: session=your-session-token"
+```
+
+```javascript JavaScript
+const response = await fetch('/api/notifications', {
+  method: 'DELETE',
+  credentials: 'include'
+});
+
+const result = await response.json();
+```
+</CodeGroup>
+
+### Response
+
+<Tabs>
+  <Tab title="Success (200)">
+    ```json
+    { "success": true }
+    ```
+  </Tab>
+  <Tab title="Error (401)">
+    ```text
+    Unauthorized
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## Real-time Updates
+
+Notifications support real-time delivery via WebSocket channels. When a notification is created, it's automatically broadcast to the user's channel:
+
+```javascript
+// Subscribe to real-time notifications
+const channel = realtime.channel(`user-${userId}`);
+
+channel.on('notification.created', (notification) => {
+  console.log('New notification:', notification);
+  // Update UI with new notification
+});
+```
+
+The real-time event payload includes:
+
+```json
+{
+  "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  "userId": "user123",
+  "type": "message",
+  "message": "Your dashboard was updated successfully",
+  "createdAt": "2024-01-20T15:30:00.000Z"
+}
+```
+
+## Storage
+
+Notifications are stored in Redis using a list data structure:
+
+- Key format: `notifications:user:{userId}`
+- Stored as Redis list (LPUSH for new items)
+- Automatically trimmed to 100 most recent notifications
+- Retrieved in reverse order (newest first)
+
+<Info>
+  Notifications are stored in Redis for fast access and automatic expiration. The system maintains up to 100 notifications per user, but only returns the 50 most recent via the API.
+</Info>
